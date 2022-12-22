@@ -1,0 +1,38 @@
+.index-page {
+    background: #f7dc6f;
+}
+
+
+.navbar .navbar-brand-center{
+    font-color: "white";
+    font-family: 'Alfa Slab One', cursive;
+    font-size: 50px;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    text-align: center;
+    margin: auto;
+    background-color: #343a40;
+    color: FFFFFF;
+}
+
+.content {
+    padding: 200px;
+}
+.content h1{
+    font-family: "Fjalla One", sans-serif;
+    font-size: 2.5rem;
+    color: #15384f;
+    letter-spacing: -1px;
+    padding:
+
+}
+.content p {
+    font-family:'Merriweather', serif;
+    letter-spacing: 0.9px;
+}
+.footer-title {
+    color: #15384f;
+    font-family: "Fjalla One", sans-serif;
+}
