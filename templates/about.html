@@ -1,0 +1,57 @@
+{% include 'header.html' %}
+<div class="collapse" id="navbarToggleExternalContent">
+    <div class="bg-dark p-3">
+        <h4 class="text-white"><a class="nav-link active" href="{{'about'}}">About</a></h4>
+        <h4 class="text-white"><a class="nav-link active" href="{{'blogs'}}">Blogy</a></h4>
+        <h4 class="text-white"><a class="nav-link active" href="{{'forum'}}">Forum</a></h4>
+        <h4 class="text-white"><a class="nav-link active" href="{{'search'}}">Hledat</a></h4>
+        <h4 class="text-white"><a class="nav-link active" href="{{'news'}}">Zpravy</a></h4>
+
+    </div>
+</div>
+<nav class="navbar navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="d-flex align-items-center">
+        <button type="button" class="btn btn-primary me-3">
+            Login
+        </button>
+
+        <button type="button" class="btn btn-primary me-3">
+            Sign up
+        </button>
+        <a
+                class="btn btn-dark px-3"
+                href="https://github.com/mdbootstrap/mdb-ui-kit"
+                role="button"
+        ><i class="bi bi-instagram"></i
+        ></a>
+        <a
+                class="btn btn-dark px-3"
+                href="https://github.com/mdbootstrap/mdb-ui-kit"
+                role="button"
+        ><i class="bi bi-facebook"></i
+        ></a>
+        <a
+                class="btn btn-dark px-3"
+                href="https://github.com/mdbootstrap/mdb-ui-kit"
+                role="button"
+        ><i class="bi bi-youtube"></i
+        ></a>
+    </div>
+
+</nav>
+<div>
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand-center" style="color: white;">Cirkus Cafe</a>
+    </nav>
+</div>
+<div class="container-md content">
+    <div class="col-12">
+    </div>
+</div>
+{% include 'footer.html' %}

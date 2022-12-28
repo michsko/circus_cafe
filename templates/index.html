@@ -1,27 +1,52 @@
 {% include "header.html" %}
-<div class="index-page">
+<body>
+<div class="index-page" style="background-image: url('static/images/cr2.png'); opacity: ;">
     <!-- Navbar -->
-    <nav class="pos-f-t">
-        <div class="collapse" id="navbarToggleExternalContent">
-            <div class="bg-dark p-3">
-                <h4 class="text-white"><a class="nav-link active" href="#">About Cirkus Cafe</a></h4>
-                <span class="text-muted">Toggleable via the navbar brand.</span>
-                <h4 class="text-white"><a class="nav-link active" href="#">Register</a></h4>
-                <span class="text-muted">Toggleable via the navbar brand.</span>
-                <h4 class="text-white"><a class="nav-link active" href="#">Login</a></h4>
-                <span class="text-muted">Toggleable via the navbar brand.</span>
-                <h4 class="text-white"><a class="nav-link active" href="#"></a></h4>
+    <div class="collapse" id="navbarToggleExternalContent">
+        <div class="bg-dark p-3">
+            <h4 class="text-white"><a class="nav-link active" href="{{'about'}}">About</a></h4>
+            <h4 class="text-white"><a class="nav-link active" href="{{'blogs'}}">Blogy</a></h4>
+            <h4 class="text-white"><a class="nav-link active" href="{{'forum'}}">Forum</a></h4>
+            <h4 class="text-white"><a class="nav-link active" href="{{'search'}}">Hledat</a></h4>
+            <h4 class="text-white"><a class="nav-link active" href="{{'news'}}">Zpravy</a></h4>
 
-            </div>
         </div>
-        <nav class="navbar navbar-dark bg-dark">
+    </div>
+    <nav class="navbar navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+        <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary me-3">
+                Login
             </button>
-        </nav>
+
+            <button type="button" class="btn btn-primary me-3">
+                Sign up
+            </button>
+            <a
+                    class="btn btn-dark px-3"
+                    href="https://github.com/mdbootstrap/mdb-ui-kit"
+                    role="button"
+            ><i class="bi bi-instagram"></i
+            ></a>
+            <a
+                    class="btn btn-dark px-3"
+                    href="https://github.com/mdbootstrap/mdb-ui-kit"
+                    role="button"
+            ><i class="bi bi-facebook"></i
+            ></a>
+            <a
+                    class="btn btn-dark px-3"
+                    href="https://github.com/mdbootstrap/mdb-ui-kit"
+                    role="button"
+            ><i class="bi bi-youtube"></i
+            ></a>
+        </div>
+
     </nav>
     <div>
         <nav class="navbar navbar-dark bg-dark">
@@ -31,16 +56,17 @@
 
     <div class="container-md content">
         <div class="col-12">
-            <h1 class="definition">Navigate thorough the circus of the Power & Politics</h1>
+            <h1 class="definition">Navigate thorough the circus of the <b>POWER</b> & <b>POLITICS</b></h1>
         </div>
         <div class="col-12">
-            <p>This is a page that might help you navigate through the politics and
-                foreign policy. Czech republic has more than 8000 thousend politics in their office.
+            <p> This is a page that might help you navigate through the politics and
+                foreign policy. Czech republic has more than 8000 thousand politics in their office.
                 Ambition of this page is to inform you about those individuals.
                 This page also work as a platform to discuss politics and news form this field.
                 Importance of this ambition is immense so explore this piece of puzzle and question your local
                 politician.</p>
         </div>
     </div>
-
-    {% include "footer.html" %}
+</div>
+</body>
+{% include "footer.html" %}
