@@ -1,0 +1,53 @@
+<!-- Navbar -->
+<div class="collapse" id="navbarToggleExternalContent">
+    <div class="bg-dark p-3">
+        <h4 class="text-white"><a class="nav-link active" href="{{url_for('about')}}">About</a></h4>
+        <h4 class="text-white"><a class="nav-link active" href="{{url_for('blogs')}}">Blogy</a></h4>
+        <h4 class="text-white"><a class="nav-link active" href="{{url_for('forum')}}">Forum</a></h4>
+        <h4 class="text-white"><a class="nav-link active" href="{{url_for('search')}}">Hledat</a></h4>
+        <h4 class="text-white"><a class="nav-link active" href="{{url_for('news')}}">Zpravy</a></h4>
+
+    </div>
+</div>
+<nav class="navbar navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="d-flex align-items-center">
+        <a class="btn btn-primary me-3" href="{{url_for('login')}}" role="button">
+            Login
+        </a>
+
+        <a class="btn btn-primary me-3" href="{{url_for('register')}}" role="button">
+            Sign up
+        </a>
+
+        <a
+            class="btn btn-dark px-3"
+            href="#"
+            role="button"
+            ><i class="bi bi-instagram"></i
+        ></a>
+        <a
+                class="btn btn-dark px-3"
+                href="#"
+                role="button"
+        ><i class="bi bi-facebook"></i
+        ></a>
+        <a
+                class="btn btn-dark px-3"
+                href="#"
+                role="button"
+        ><i class="bi bi-youtube"></i
+        ></a>
+    </div>
+
+</nav>
+<div>
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand-center" style="color: white;">Cirkus Cafe</a>
+    </nav>
+</div>

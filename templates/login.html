@@ -1,0 +1,28 @@
+{% include 'header.html' %}
+{% include 'navbar.html' %}
+
+<div class="container-md login-form">
+    <div class="col-12">
+        {% if email and password %}
+        <h3>Hello user {{ email }}</h3>
+        {% else %}
+        <h6>Přihlašovací údaje?</h6>
+        <br/>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+            <br/>
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control") }}
+            <br/>
+            {{ form.submit(class="btn btn-secondary") }}
+
+            {% endif %}
+        </form>
+    </div>
+</div>
+</body>
+
+{% include 'footer.html' %}
