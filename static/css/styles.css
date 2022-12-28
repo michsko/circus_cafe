@@ -175,3 +175,11 @@ footer {
     padding: 250px;
     font-family: "Fjalla One", sans-serif;
 }
+
+/* register form */
+.register-form {
+    width: 100%;
+    padding: 250px;
+    font-family: "Fjalla One", sans-serif;
+
+}
