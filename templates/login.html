@@ -13,34 +13,35 @@
                                          alt="Sample photo" class="img-fluid"
                                          style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;"/>
                                 </div>
-                                  <div class="col-xl-6">
+                                <div class="col-xl-6">
                                     <div class="card-body p-md-5 text-black">
                                         <h3 class="mb-5 text-uppercase">Login form</h3>
-                                {% if email and password %}
-                                <h3>Hello user {{ email }}</h3>
-                                {% else %}
-                                <h6>Přihlašovací údaje</h6>
-                                <br/>
-                                <form method="POST">
-                                    {{ login_form.hidden_tag() }}
+                                        {% if email and password %}
+                                        <h3>Hello user {{ email }}</h3>
+                                        <h3>Hello user {{ password }}</h3>
+                                        {% else %}
+                                        <h6>Přihlašovací údaje</h6>
+                                        <br/>
+                                        <form method="POST">
+                                            {{ login_form.hidden_tag() }}
 
-                                    {{ login_form.email.label(class="form-label") }}
-                                    {{ login_form.email(class="form-control") }}
-                                    <br/>
-                                    {{ login_form.password.label(class="form-label") }}
-                                    {{ login_form.password(class="form-control") }}
-                                    <br/>
-                                     <div class="d-flex justify-content-end pt-3">
-                                    {{ login_form.submit(class="btn btn-warning btn-lg ms-2") }}
+                                            {{ login_form.email.label(class="form-label") }}
+                                            {{ login_form.email(class="form-control") }}
+                                            <br/>
+                                            {{ login_form.password.label(class="form-label") }}
+                                            {{ login_form.password(class="form-control") }}
+                                            <br/>
+                                            <div class="d-flex justify-content-end pt-3">
+                                                {{ login_form.submit(class="btn btn-warning btn-lg ms-2") }}
 
-                                    {% endif %}
-                                </form>
+                                                {% endif %}
+                                        </form>
+                                    </div>
+
+                                </div>
                             </div>
-
                         </div>
                     </div>
-                </div>
-            </div>
         </section>
     </div>
 </div>

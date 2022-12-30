@@ -1,8 +1,8 @@
 from flask import Flask, render_template, flash
 from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash
-from wtforms import StringField, SubmitField, BooleanField, IntegerField, RadioField, SelectField
-from wtforms.validators import DataRequired
+from wtforms import StringField, SubmitField, BooleanField, IntegerField, RadioField, SelectField, PasswordField
+from wtforms.validators import DataRequired, equal_to
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -68,23 +68,23 @@ with app.app_context():
 
 class LoginForm(FlaskForm):
     email = StringField("E-mail", validators=[DataRequired()])
-    password = StringField("Password", validators=[DataRequired()])
+    password = PasswordField("Heslo", validators=[DataRequired()])
     submit = SubmitField("submit")
 
 
 
 
 class UserForm(FlaskForm):
-    name = StringField("Jméno", validators=[DataRequired()])
-    surname = StringField("Příjmení", validators=[DataRequired()])
-    occupation = StringField('Povolani', validators=[DataRequired()])
-    phone_number = StringField('Telefon', validators=[DataRequired()])
-    gender = SelectField("Gender", choices=[('Žena'), ('Muž'), ('Jiné')], validators=[DataRequired()])
-    email = StringField("E-mail", validators=[DataRequired()])
-    street_address = StringField("Adresa", validators=[DataRequired()])
-    house_number = StringField("c.p.", validators=[DataRequired()])
-    city = StringField("Mesto", validators=[DataRequired()])
-    state = SelectField("Stat", choices=[(" "),("Belgické království"),
+    name = StringField(" Jméno", validators=[DataRequired()])
+    surname = StringField(" Příjmení", validators=[DataRequired()])
+    occupation = StringField(' Povolani', validators=[DataRequired()])
+    phone_number = StringField(' Telefon', validators=[DataRequired()])
+    gender = SelectField(" Gender", choices=[('Žena'), ('Muž'), ('Jiné')], validators=[DataRequired()])
+    email = StringField(" E-mail", validators=[DataRequired()])
+    street_address = StringField(" Adresa", validators=[DataRequired()])
+    house_number = StringField(" c.p.", validators=[DataRequired()])
+    city = StringField(" Mesto", validators=[DataRequired()])
+    state = SelectField(" Stat", choices=[(" "),("Belgické království"),
                                                         ("Bulharská republika"),
                                                         ("Česká republika"),
                                                         ("Dánské království"),
@@ -112,11 +112,11 @@ class UserForm(FlaskForm):
                                                         ("Španělské království"),
                                                         ("Švédské království"),
                                          ("jiny stat")])
-    state2 = StringField("jiny stat")
-    zip_code = StringField("PSC", validators=[DataRequired()])
-    password = StringField("Heslo", validators=[DataRequired()])
-    password2 = StringField("Opakovat heslo", validators=[DataRequired()])
-    terms_agreement = BooleanField("Souhlasím s podmínkami", validators=[DataRequired()])
+    state2 = StringField(" jiny stat")
+    zip_code = StringField(" PSC", validators=[DataRequired()])
+    password = PasswordField(" Heslo", validators=[DataRequired(), equal_to("password2", message="Hesla musi souhlasit.")])
+    password2 = PasswordField(" Opakovat heslo", validators=[DataRequired()])
+    terms_agreement = BooleanField(" Souhlasím s podmínkami", validators=[DataRequired()])
     submit = SubmitField("Submit form")
 
 
@@ -160,11 +160,16 @@ def profile():
 def login():
     email = None
     password = None
+    password_to_check = None
+    passed = None
     login_form = LoginForm()
+
     # validate Form
     if login_form.validate_on_submit():
         email = login_form.email.data
         password = login_form.password.data
+
+        # clear the form
         login_form.email.data = ''
         login_form.password.data = ''
     return render_template("login.html", email=email, password=password, login_form=login_form)
@@ -212,26 +217,27 @@ def register():
                          terms_agreement=register_form.terms_agreement.data,
                          date_of_registration=datetime.now())
 
-            if password2 == password:
-                db.session.add(user)
-                db.session.commit()
-            name = register_form.name.data
-            register_form.name.data = ''
-            register_form.surname.data = ''
-            register_form.occupation.data = ''
-            register_form.phone_number.data = ''
-            register_form.gender.data = ''
-            register_form.email.data = ''
-            register_form.street_address.data = ''
-            register_form.house_number.data = ''
-            register_form.city.data = ''
-            register_form.state.data = ''
-            register_form.zip_code.data = ''
-            register_form.password.data = ''
-            register_form.password2.data = ''
-            register_form.terms_agreement.data = ''
-            register_form.date_of_registration = ''
-        flash("Registrace probehla uspesne .")
+
+            db.session.add(user)
+            db.session.commit()
+        name = register_form.name.data
+        register_form.name.data = ''
+        register_form.surname.data = ''
+        register_form.occupation.data = ''
+        register_form.phone_number.data = ''
+        register_form.gender.data = ''
+        register_form.email.data = ''
+        register_form.street_address.data = ''
+        register_form.house_number.data = ''
+        register_form.city.data = ''
+        register_form.state.data = ''
+        register_form.zip_code.data = ''
+        register_form.password.data = ''
+        register_form.password2.data = ''
+        register_form.terms_agreement.data = ''
+        register_form.date_of_registration = ''
+
+        flash("Registrace probehla uspesne.")
     our_users = Users.query.order_by(Users.date_of_registration)
     return render_template("register.html", register_form=register_form,
                            name=name,

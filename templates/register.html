@@ -18,6 +18,14 @@
                                     <div class="card-body p-md-5 text-black">
                                         <h3 class="mb-5 text-uppercase">Registration form</h3>
                                         <form method="post">
+                                            {% for message in get_flashed_messages() %}
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                {{ message }}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            {{ message }}
+                                            {% endfor %}
                                             {{ register_form.hidden_tag() }}
                                             <div class="row">
                                                 <div class="col-md-6 mb-4">
@@ -54,11 +62,8 @@
                                             <div class="row">
                                                 <div class="col-md-6 mb-4">
                                                     <div class="form-outline">
-
-
                                                         {{ register_form.gender(class="form-control") }}
                                                         {{ register_form.gender.label(class="form-label") }}
-
                                                     </div>
                                                 </div>
                                                 <div class="form-outline mb-4">
@@ -67,104 +72,104 @@
                                                         form-control-lg") }}
                                                         {{ register_form.email.label(class="form-label") }}
                                                     </div>
+                                                </div>
+                                                <div class="form-outline mb-4">
+                                                    {{ register_form.street_address(class="form-control
+                                                    form-control-lg") }}
+                                                    {{
+                                                    register_form.street_address.label(class="form-label")
+                                                    }}
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-4">
+                                                        <div class="form-outline">
+                                                            {{
+                                                            register_form.house_number(class="form-control
+                                                            form-control-lg") }}
+                                                            {{
+                                                            register_form.house_number.label(class="form-label")
+                                                            }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-4">
+                                                        <div class="form-outline">
+                                                            {{ register_form.city(class="form-control
+                                                            form-control-lg") }}
+                                                            {{ register_form.city.label(class="form-label")
+                                                            }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-4">
+                                                        <div class="form-outline">
+                                                            {{ register_form.zip_code(class="form-control
+                                                            form-control-lg") }}
+                                                            {{
+                                                            register_form.zip_code.label(class="form-label")
+                                                            }}
+                                                        </div>
+                                                    </div>
+                                                </div>
 
 
-                                                    <div class="form-outline mb-4">
-                                                        {{ register_form.street_address(class="form-control
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-4">
+                                                        {{ register_form.state(class="form-control
                                                         form-control-lg") }}
-                                                        {{
-                                                        register_form.street_address.label(class="form-label")
+                                                        {{ register_form.state.label(class="form-label") }}
+                                                    </div>
+                                                    <div class="col-md-6 mb-4">
+                                                        <div class="form-outline">
+                                                            {{ register_form.state2(class="form-control
+                                                            form-control-lg") }}
+                                                            {{
+                                                            register_form.state2.label(class="form-label")
+                                                            }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-outline mb-4">
+                                                    <div class="form-outline">
+                                                        {{ register_form.password(class="form-control
+                                                        form-control-lg") }}
+                                                        {{ register_form.password.label(class="form-label")
                                                         }}
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-4">
-                                                            <div class="form-outline">
-                                                                {{
-                                                                register_form.house_number(class="form-control
-                                                                form-control-lg") }}
-                                                                {{
-                                                                register_form.house_number.label(class="form-label")
-                                                                }}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-4">
-                                                            <div class="form-outline">
-                                                                {{ register_form.city(class="form-control
-                                                                form-control-lg") }}
-                                                                {{ register_form.city.label(class="form-label")
-                                                                }}
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 mb-4">
-                                                            <div class="form-outline">
-                                                                {{ register_form.zip_code(class="form-control
-                                                                form-control-lg") }}
-                                                                {{
-                                                                register_form.zip_code.label(class="form-label")
-                                                                }}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-4">
-                                                            {{ register_form.state(class="form-control
-                                                            form-control-lg") }}
-                                                            {{ register_form.state.label(class="form-label") }}
-                                                        </div>
-                                                        <div class="col-md-6 mb-4">
-                                                            <div class="form-outline">
-                                                                {{ register_form.state2(class="form-control
-                                                                form-control-lg") }}
-                                                                {{
-                                                                register_form.state2.label(class="form-label")
-                                                                }}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
                                                     <div class="form-outline mb-4">
                                                         <div class="form-outline">
-                                                            {{ register_form.password(class="form-control
+                                                            {{ register_form.password2(class="form-control
                                                             form-control-lg") }}
-                                                            {{ register_form.password.label(class="form-label")
-                                                            }}
-                                                        </div>
-                                                        <div class="form-outline mb-4">
-                                                            <div class="form-outline">
-                                                                {{ register_form.password2(class="form-control
-                                                                form-control-lg") }}
-                                                                {{
-                                                                register_form.password2.label(class="form-label")
-                                                                }}
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            {{ register_form.terms_agreement(class="form-check-input") }}
                                                             {{
-                                                            register_form.terms_agreement.label(class="form-label")
+                                                            register_form.password2.label(class="form-label")
                                                             }}
-                                                            <div class="d-flex justify-content-end pt-3">
-                                                                {{ register_form.submit(class="btn btn-warning btn-lg ms-2") }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        {{ register_form.terms_agreement(class="form-check-input") }}
+                                                        {{
+                                                        register_form.terms_agreement.label(class="form-label")
+                                                        }}
+                                                        <div class="d-flex justify-content-end pt-3">
+                                                            {{ register_form.submit(class="btn btn-warning btn-lg ms-2")
+                                                            }}
 
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </form>
                                     </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
     </div>
+    </section>
+</div>
 </div>
 
 <br/><br/><br/>
