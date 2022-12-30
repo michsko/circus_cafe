@@ -1,28 +1,48 @@
 {% include 'header.html' %}
 {% include 'navbar.html' %}
-
 <div class="container-md login-form">
     <div class="col-12">
-        {% if email and password %}
-        <h3>Hello user {{ email }}</h3>
-        {% else %}
-        <h6>Přihlašovací údaje?</h6>
-        <br/>
-        <form method="POST">
-            {{ form.hidden_tag() }}
+        <section class="h-100 bg-dark">
+            <div class="container py-5 h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col">
+                        <div class="card card-registration my-4">
+                            <div class="row g-0">
+                                <div class="col-xl-6 d-none d-xl-block">
+                                    <img src="static/images/Czech_Republic.png"
+                                         alt="Sample photo" class="img-fluid"
+                                         style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;"/>
+                                </div>
+                                  <div class="col-xl-6">
+                                    <div class="card-body p-md-5 text-black">
+                                        <h3 class="mb-5 text-uppercase">Login form</h3>
+                                {% if email and password %}
+                                <h3>Hello user {{ email }}</h3>
+                                {% else %}
+                                <h6>Přihlašovací údaje</h6>
+                                <br/>
+                                <form method="POST">
+                                    {{ login_form.hidden_tag() }}
 
-            {{ form.email.label(class="form-label") }}
-            {{ form.email(class="form-control") }}
-            <br/>
-            {{ form.password.label(class="form-label") }}
-            {{ form.password(class="form-control") }}
-            <br/>
-            {{ form.submit(class="btn btn-secondary") }}
+                                    {{ login_form.email.label(class="form-label") }}
+                                    {{ login_form.email(class="form-control") }}
+                                    <br/>
+                                    {{ login_form.password.label(class="form-label") }}
+                                    {{ login_form.password(class="form-control") }}
+                                    <br/>
+                                     <div class="d-flex justify-content-end pt-3">
+                                    {{ login_form.submit(class="btn btn-warning btn-lg ms-2") }}
 
-            {% endif %}
-        </form>
+                                    {% endif %}
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </div>
-</body>
 
 {% include 'footer.html' %}

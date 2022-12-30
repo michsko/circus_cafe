@@ -1,11 +1,10 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from werkzeug.security import generate_password_hash
+from wtforms import StringField, SubmitField, BooleanField, IntegerField, RadioField, SelectField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import pytz
-
 
 app = Flask(__name__)
 # add database
@@ -16,68 +15,109 @@ app.config['SECRET_KEY'] = "Ja Pisi Vam Co Mohu Vice"
 db = SQLAlchemy(app)
 
 
-
 # create a model
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     surname = db.Column(db.String(100), nullable=False)
+    occupation = db.Column(db.String(100), nullable=False)
+    phone_number = db.Column(db.Integer, nullable=False)
     gender = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(150), nullable=False, unique=True)
     street_address = db.Column(db.String(100), nullable=False)
     house_number = db.Column(db.Integer, nullable=False)
     city = db.Column(db.String(100), nullable=False)
-    state = db.Column(db.String(100), nullable=False)
+    state = db.Column(db.String(100))
+    state2 = db.Column(db.String(100))
     zip_code = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(100), nullable=False)
-    password2 = db.Column(db.String(100), nullable=False)
     terms_agreement = db.Column(db.String(100), nullable=False)
     date_of_registration = db.Column(db.DateTime, default=datetime.now)
 
     # create a string
-    def __init__(self, name, surname, gender, email, street_address, house_number, city, state, zip_code, password, password2, terms_agreement, date_of_registration):
+    def __init__(self, name, surname, occupation, phone_number, gender, email, street_address, house_number, city,
+                 state, state2, zip_code, password,
+                 password2, terms_agreement, date_of_registration):
         self.name = name
         self.surname = surname
+        self.occupation = occupation
+        self.phone_number = phone_number
         self.gender = gender
         self.email = email
         self.street_address = street_address
         self.house_number = house_number
         self.city = city
+        self.state = state
+        self.state2 = state2
         self.zip_code = zip_code
         self.password = password
         self.password2 = password2
         self.terms_agreement = terms_agreement
-        self.date_of_registration = date_of_registration
-    def __repr__(self):
-        return '<Name %r>' %self.name
+        self.date_of_registration = datetime.now()
 
- # Creation of the database tables within the application context.
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
+
+# Creation of the database tables within the application context.
 with app.app_context():
     db.create_all()
+
+
 # create a Form Class
 
 class LoginForm(FlaskForm):
     email = StringField("E-mail", validators=[DataRequired()])
     password = StringField("Password", validators=[DataRequired()])
-
     submit = SubmitField("submit")
+
+
+
 
 class UserForm(FlaskForm):
-    name =StringField("Name", validators=[DataRequired()])
-    surname =StringField("Surname", validators=[DataRequired()])
-    gender =StringField("Gender", validators=[DataRequired()])
+    name = StringField("Jméno", validators=[DataRequired()])
+    surname = StringField("Příjmení", validators=[DataRequired()])
+    occupation = StringField('Povolani', validators=[DataRequired()])
+    phone_number = StringField('Telefon', validators=[DataRequired()])
+    gender = SelectField("Gender", choices=[('Žena'), ('Muž'), ('Jiné')], validators=[DataRequired()])
     email = StringField("E-mail", validators=[DataRequired()])
-    street_address = StringField("Street address", validators=[DataRequired()])
-    house_number = db.Column("House number", validators=[DataRequired()])
-    city = StringField("City", validators=[DataRequired()])
-    state = StringField("State", validators=[DataRequired()])
-    zip_code = db.Column("Zip-code", validators=[DataRequired()])
-    password = StringField("Password", validators=[DataRequired()])
-    password2 = StringField("Password repeat", validators=[DataRequired()])
-    terms_agreement = StringField("Terms and condition", validators=[DataRequired()])
-    email = StringField("E-mail", validators=[DataRequired()])
-    password = StringField("Password", validators=[DataRequired()])
-    submit = SubmitField("submit")
+    street_address = StringField("Adresa", validators=[DataRequired()])
+    house_number = StringField("c.p.", validators=[DataRequired()])
+    city = StringField("Mesto", validators=[DataRequired()])
+    state = SelectField("Stat", choices=[(" "),("Belgické království"),
+                                                        ("Bulharská republika"),
+                                                        ("Česká republika"),
+                                                        ("Dánské království"),
+                                                        ("Estonská republika"),
+                                                        ("Finská republika"),
+                                                        ("Francouzská republika"),
+                                                        ("Chorvatská republika"),
+                                                        ("Irsko"),
+                                                        ("Italská republika"),
+                                                        ("Kyperská republika"),
+                                                        ("Litevská republika"),
+                                                        ("Lotyšská republika"),
+                                                        ("Lucemburské velkovévodství"),
+                                                        ("Maďarsko"),
+                                                        ("Maltská republika"),
+                                                        ("Spolková republika Německo"),
+                                                        ("Nizozemské království"),
+                                                        ("Polská republika"),
+                                                        ("Portugalská republika"),
+                                                        ("Rakouská republika"),
+                                                        ("Rumunsko"),
+                                                        ("Řecká republika"),
+                                                        ("Slovenská republika"),
+                                                        ("Slovinská republika"),
+                                                        ("Španělské království"),
+                                                        ("Švédské království"),
+                                         ("jiny stat")])
+    state2 = StringField("jiny stat")
+    zip_code = StringField("PSC", validators=[DataRequired()])
+    password = StringField("Heslo", validators=[DataRequired()])
+    password2 = StringField("Opakovat heslo", validators=[DataRequired()])
+    terms_agreement = BooleanField("Souhlasím s podmínkami", validators=[DataRequired()])
+    submit = SubmitField("Submit form")
 
 
 @app.route("/")
@@ -120,19 +160,82 @@ def profile():
 def login():
     email = None
     password = None
-    form = loginForm()
+    login_form = LoginForm()
     # validate Form
-    if form.validate_on_submit():
-        email = form.email.data
-        password = form.password.data
-        form.email.data = ''
-        form.password.data = ''
-    return render_template("login.html", email=email, password=password, form=form)
+    if login_form.validate_on_submit():
+        email = login_form.email.data
+        password = login_form.password.data
+        login_form.email.data = ''
+        login_form.password.data = ''
+    return render_template("login.html", email=email, password=password, login_form=login_form)
 
 
-@app.route("/register")
+@app.route("/register", methods=['GET', 'POST'])
 def register():
-    return render_template("register.html")
+    name = None
+    surname = None
+    occupation = None
+    phone_number = None
+    gender = None
+    email = None
+    street_address = None
+    house_number = None
+    city = None
+    state = None
+    state2 = None
+    zip_code = None
+    password = None
+    password2 = None
+    terms_agreement = None
+    register_form = UserForm()
+    if register_form.validate_on_submit():
+        user = Users.query.filter_by(email=register_form.email.data).first()
+        if user is None:
+            # hash password
+            hashed_pw = generate_password_hash(register_form.password.data, "sha256")
+            hashed_pw2 = generate_password_hash(register_form.password2.data, "sha256")
+
+            user = Users(name=register_form.name.data,
+                         surname=register_form.surname.data,
+                         occupation=register_form.occupation.data,
+                         phone_number=register_form.phone_number.data,
+                         gender=register_form.gender.data,
+                         email=register_form.email.data,
+                         street_address=register_form.street_address.data,
+                         house_number=register_form.house_number.data,
+                         city=register_form.city.data,
+                         state=register_form.state.data,
+                         state2=register_form.state2.data,
+                         zip_code=register_form.zip_code.data,
+                         password=hashed_pw,
+                         password2=hashed_pw2,
+                         terms_agreement=register_form.terms_agreement.data,
+                         date_of_registration=datetime.now())
+
+            if password2 == password:
+                db.session.add(user)
+                db.session.commit()
+            name = register_form.name.data
+            register_form.name.data = ''
+            register_form.surname.data = ''
+            register_form.occupation.data = ''
+            register_form.phone_number.data = ''
+            register_form.gender.data = ''
+            register_form.email.data = ''
+            register_form.street_address.data = ''
+            register_form.house_number.data = ''
+            register_form.city.data = ''
+            register_form.state.data = ''
+            register_form.zip_code.data = ''
+            register_form.password.data = ''
+            register_form.password2.data = ''
+            register_form.terms_agreement.data = ''
+            register_form.date_of_registration = ''
+        flash("Registrace probehla uspesne .")
+    our_users = Users.query.order_by(Users.date_of_registration)
+    return render_template("register.html", register_form=register_form,
+                           name=name,
+                           our_users=our_users)
 
 
 if __name__ == "__main__":

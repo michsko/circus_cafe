@@ -17,146 +17,145 @@
                                 <div class="col-xl-6">
                                     <div class="card-body p-md-5 text-black">
                                         <h3 class="mb-5 text-uppercase">Registration form</h3>
-
-                                        <div class="row">
-                                            <div class="col-md-6 mb-4">
-                                                <div class="form-outline">
-                                                    <input type="text" id="form3Example1m"
-                                                           class="form-control form-control-lg"/>
-                                                    <label class="form-label" for="form3Example1m">Jméno</label>
+                                        <form method="post">
+                                            {{ register_form.hidden_tag() }}
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="form-outline">
+                                                        {{ register_form.name(class="form-control form-control-lg") }}
+                                                        {{ register_form.name.label(class="form-label") }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="form-outline">
+                                                        {{ register_form.surname(class="form-control form-control-lg")
+                                                        }}
+                                                        {{ register_form.surname.label(class="form-label") }}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 mb-4">
-                                                <div class="form-outline">
-                                                    <input type="text"
-                                                           class="form-control form-control-lg"/>
-                                                    <label class="form-label" for="form3Example1n">Příjmení</label>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="form-outline">
+                                                        {{ register_form.occupation(class="form-control
+                                                        form-control-lg") }}
+                                                        {{ register_form.occupation.label(class="form-label") }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="form-outline">
+                                                        {{ register_form.phone_number(class="form-control
+                                                        form-control-lg"
+                                                        , placeholder="+xxx xxxxxxxxx") }}
+                                                        {{ register_form.phone_number.label(class="form-label") }}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
-
-                                            <div class="form-check form-check-inline mb-0 me-4">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                       id="femaleGender"
-                                                       value="option1"/>
-                                                <label class="form-check-label" for="femaleGender">Žena</label>
-                                            </div>
-
-                                            <div class="form-check form-check-inline mb-0 me-4">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                       id="maleGender"
-                                                       value="option2"/>
-                                                <label class="form-check-label" for="maleGender">Muž</label>
-                                            </div>
-
-                                            <div class="form-check form-check-inline mb-0">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                       id="otherGender"
-                                                       value="option3"/>
-                                                <label class="form-check-label" for="otherGender">Jiné</label>
-                                            </div>
-
-                                        </div>
-                                        <div class="form-outline mb-4">
-                                            <div class="form-outline">
-                                                <input type="text"
-                                                       class="form-control form-control-lg"/>
-                                                <label class="form-label">E-mail</label>
-                                            </div>
-                                        </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="form-outline">
 
 
-                                        <div class="form-outline mb-4">
-                                            <input type="text" id="form3Example8" class="form-control form-control-lg"/>
-                                            <label class="form-label">Adresa</label>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-4">
-                                                <div class="form-outline">
-                                                    <input type="text"
-                                                           class="form-control form-control-lg"/>
-                                                    <label class="form-label">Mesto</label>
+                                                        {{ register_form.gender(class="form-control") }}
+                                                        {{ register_form.gender.label(class="form-label") }}
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-outline mb-4">
+                                                    <div class="form-outline">
+                                                        {{ register_form.email(class="form-control
+                                                        form-control-lg") }}
+                                                        {{ register_form.email.label(class="form-label") }}
+                                                    </div>
+
+
+                                                    <div class="form-outline mb-4">
+                                                        {{ register_form.street_address(class="form-control
+                                                        form-control-lg") }}
+                                                        {{
+                                                        register_form.street_address.label(class="form-label")
+                                                        }}
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 mb-4">
+                                                            <div class="form-outline">
+                                                                {{
+                                                                register_form.house_number(class="form-control
+                                                                form-control-lg") }}
+                                                                {{
+                                                                register_form.house_number.label(class="form-label")
+                                                                }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 mb-4">
+                                                            <div class="form-outline">
+                                                                {{ register_form.city(class="form-control
+                                                                form-control-lg") }}
+                                                                {{ register_form.city.label(class="form-label")
+                                                                }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 mb-4">
+                                                            <div class="form-outline">
+                                                                {{ register_form.zip_code(class="form-control
+                                                                form-control-lg") }}
+                                                                {{
+                                                                register_form.zip_code.label(class="form-label")
+                                                                }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="col-md-6 mb-4">
+                                                            {{ register_form.state(class="form-control
+                                                            form-control-lg") }}
+                                                            {{ register_form.state.label(class="form-label") }}
+                                                        </div>
+                                                        <div class="col-md-6 mb-4">
+                                                            <div class="form-outline">
+                                                                {{ register_form.state2(class="form-control
+                                                                form-control-lg") }}
+                                                                {{
+                                                                register_form.state2.label(class="form-label")
+                                                                }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-outline mb-4">
+                                                        <div class="form-outline">
+                                                            {{ register_form.password(class="form-control
+                                                            form-control-lg") }}
+                                                            {{ register_form.password.label(class="form-label")
+                                                            }}
+                                                        </div>
+                                                        <div class="form-outline mb-4">
+                                                            <div class="form-outline">
+                                                                {{ register_form.password2(class="form-control
+                                                                form-control-lg") }}
+                                                                {{
+                                                                register_form.password2.label(class="form-label")
+                                                                }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            {{ register_form.terms_agreement(class="form-check-input") }}
+                                                            {{
+                                                            register_form.terms_agreement.label(class="form-label")
+                                                            }}
+                                                            <div class="d-flex justify-content-end pt-3">
+                                                                {{ register_form.submit(class="btn btn-warning btn-lg ms-2") }}
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 mb-4">
-                                                <div class="form-outline">
-                                                    <input type="text"
-                                                           class="form-control form-control-lg"/>
-                                                    <label class="form-label" for="form3Example1n">PSC</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="row">
-                                            <div class="col-md-6 mb-4">
-
-                                                <select class="select">
-                                                    <option value="1">Stát</option>
-                                                    <option value="2">Belgické království</option>
-                                                    <option value="3">Bulharská republika</option>
-                                                    <option value="4">Česká republika</option>
-                                                    <option value="5">Dánské království</option>
-                                                    <option value="6">Estonská republika</option>
-                                                    <option value="7">Finská republika</option>
-                                                    <option value="8">Francouzská republika</option>
-                                                    <option value="9">Chorvatská republika</option>
-                                                    <option value="1O">Irsko</option>
-                                                    <option value="11">Italská republika</option>
-                                                    <option value="12">Kyperská republika</option>
-                                                    <option value="13">Litevská republika</option>
-                                                    <option value="14">Lotyšská republika</option>
-                                                    <option value="15">Lucemburské velkovévodství</option>
-                                                    <option value="16">Maďarsko</option>
-                                                    <option value="17">Maltská republika</option>
-                                                    <option value="18">Spolková republika Německo</option>
-                                                    <option value="19">Nizozemské království</option>
-                                                    <option value="2O">Polská republika</option>
-                                                    <option value="21">Portugalská republika</option>
-                                                    <option value="22">Rakouská republika</option>
-                                                    <option value="23">Rumunsko</option>
-                                                    <option value="24">Řecká republika</option>
-                                                    <option value="25">Slovenská republika</option>
-                                                    <option value="26">Slovinská republika</option>
-                                                    <option value="27">Španělské království</option>
-                                                    <option value="28">Švédské království</option>
-                                                    <option value="28">Jiný</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6 mb-4">
-                                                <div class="form-outline">
-                                                    <input type="text" id="form3Example1n"
-                                                           class="form-control form-control-lg"/>
-                                                    <label class="form-label" for="form3Example1n">Jiný stát</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-outline mb-4">
-                                            <div class="form-outline">
-                                                <input type="text"
-                                                       class="form-control form-control-lg"/>
-                                                <label class="form-label">Heslo</label>
-                                            </div>
-                                        </div>
-                                        <div class="form-outline mb-4">
-                                            <div class="form-outline">
-                                                <input type="text"
-                                                       class="form-control form-control-lg"/>
-                                                <label class="form-label">Opakovat heslo</label>
-                                            </div>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck2"
-                                                   required>
-                                            <label class="form-check-label" for="invalidCheck2">
-                                                Souhlasím s podmínkami
-                                            </label>
-                                        </div>
-
-
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -168,4 +167,10 @@
     </div>
 </div>
 
+<br/><br/><br/>
+{% for  our_user in our_users %}
+{{ our_user.id }}. {{ our_user.name }} - {{ our_user.email }} {{ our_user.gender }} {{ our_user.password }}
+{{ our_user.street_address }} {{ our_user.state }} {{ our_user.surname }} {{ our_user.occupation }}
+{{ our_user.house_number }} {{ our_user.city }}{{ our_user.terms_agreement }}<br/>
+{% endfor %}
 {% include 'footer.html' %}
