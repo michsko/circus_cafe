@@ -24,7 +24,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                         aria-label="Close"></button>
                                             </div>
-                                            {{ message }}
+
                                             {% endfor %}
                                             {{ register_form.hidden_tag() }}
                                             <div class="row">
@@ -159,23 +159,17 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </form>
                                     </div>
-                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </section>
     </div>
-    </section>
-</div>
 </div>
 
-<br/><br/><br/>
-{% for  our_user in our_users %}
-{{ our_user.id }}. {{ our_user.name }} - {{ our_user.email }} {{ our_user.gender }} {{ our_user.password }}
-{{ our_user.street_address }} {{ our_user.state }} {{ our_user.surname }} {{ our_user.occupation }}
-{{ our_user.house_number }} {{ our_user.city }}{{ our_user.terms_agreement }}<br/>
-{% endfor %}
+
 {% include 'footer.html' %}

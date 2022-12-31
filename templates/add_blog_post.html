@@ -1,0 +1,43 @@
+{% include 'header.html' %}
+{% include 'navbar.html' %}
+
+
+<div class="container-md post-form">
+    <div class="shadow p-3 mb-5 bg-body rounded">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+
+        {% endfor %}
+
+        <h3 class="mb-5 text-uppercase">Add Blog Post</h3><br/>
+
+        <form method="POST">
+            {{ post_form.hidden_tag() }}
+
+            {{ post_form.title.label(class="form-label") }}
+            {{ post_form.title(class="form-control") }}
+            <br/>
+            {{ post_form.author.label(class="form-label") }}
+            {{ post_form.author(class="form-control") }}
+            <br/>
+            {{ post_form.slug.label(class="form-label") }}
+            {{ post_form.slug(class="form-control") }}
+            <br/>
+            <br/>
+            {{ post_form.content.label(class="form-label") }}
+            {{ post_form.content(class="form-control", rows="15") }}
+
+
+            <div class="d-flex justify-content-end pt-3">
+                {{ post_form.submit(class="btn btn-warning btn-lg ms-2") }}
+                <br/>
+            </div>
+        </form>
+    </div>
+</div>
+<br/><br/> <br/>
+{% include 'footer.html' %}

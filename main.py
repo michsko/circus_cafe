@@ -1,14 +1,18 @@
 from flask import Flask, render_template, flash
 from flask_wtf import FlaskForm
-from werkzeug.security import generate_password_hash
-from wtforms import StringField, SubmitField, BooleanField, IntegerField, RadioField, SelectField, PasswordField
+from werkzeug.security import generate_password_hash, check_password_hash
+from wtforms import StringField, SubmitField, BooleanField, SelectField, PasswordField
 from wtforms.validators import DataRequired, equal_to
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from wtforms.widgets import TextArea
+
 
 app = Flask(__name__)
-# add database
+# add Users database
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///users.db'
+
+
 # add secret key
 app.config['SECRET_KEY'] = "Ja Pisi Vam Co Mohu Vice"
 # initialize database
@@ -34,7 +38,18 @@ class Users(db.Model):
     terms_agreement = db.Column(db.String(100), nullable=False)
     date_of_registration = db.Column(db.DateTime, default=datetime.now)
 
-    # create a string
+    # pasword hashing and checking
+    # @property
+    # def password(self):
+    #     raise AttributeError('Nelze precist heslo!')
+    # @password.setter
+    # def password(self, password):
+    #     self.password = generate_password_hash(password)
+    #
+    # def verify_password(self, password):
+    #     return check_password_hash(self.password, password)
+    #
+
     def __init__(self, name, surname, occupation, phone_number, gender, email, street_address, house_number, city,
                  state, state2, zip_code, password,
                  password2, terms_agreement, date_of_registration):
@@ -55,14 +70,13 @@ class Users(db.Model):
         self.terms_agreement = terms_agreement
         self.date_of_registration = datetime.now()
 
-    def __repr__(self):
-        return '<Name %r>' % self.name
+    # def __repr__(self):
+    #     return '<Name %r>' % self.name
 
 
 # Creation of the database tables within the application context.
 with app.app_context():
     db.create_all()
-
 
 # create a Form Class
 
@@ -70,8 +84,6 @@ class LoginForm(FlaskForm):
     email = StringField("E-mail", validators=[DataRequired()])
     password = PasswordField("Heslo", validators=[DataRequired()])
     submit = SubmitField("submit")
-
-
 
 
 class UserForm(FlaskForm):
@@ -84,37 +96,38 @@ class UserForm(FlaskForm):
     street_address = StringField(" Adresa", validators=[DataRequired()])
     house_number = StringField(" c.p.", validators=[DataRequired()])
     city = StringField(" Mesto", validators=[DataRequired()])
-    state = SelectField(" Stat", choices=[(" "),("Belgické království"),
-                                                        ("Bulharská republika"),
-                                                        ("Česká republika"),
-                                                        ("Dánské království"),
-                                                        ("Estonská republika"),
-                                                        ("Finská republika"),
-                                                        ("Francouzská republika"),
-                                                        ("Chorvatská republika"),
-                                                        ("Irsko"),
-                                                        ("Italská republika"),
-                                                        ("Kyperská republika"),
-                                                        ("Litevská republika"),
-                                                        ("Lotyšská republika"),
-                                                        ("Lucemburské velkovévodství"),
-                                                        ("Maďarsko"),
-                                                        ("Maltská republika"),
-                                                        ("Spolková republika Německo"),
-                                                        ("Nizozemské království"),
-                                                        ("Polská republika"),
-                                                        ("Portugalská republika"),
-                                                        ("Rakouská republika"),
-                                                        ("Rumunsko"),
-                                                        ("Řecká republika"),
-                                                        ("Slovenská republika"),
-                                                        ("Slovinská republika"),
-                                                        ("Španělské království"),
-                                                        ("Švédské království"),
-                                         ("jiny stat")])
+    state = SelectField(" Stat", choices=[(" "), ("Belgické království"),
+                                          ("Bulharská republika"),
+                                          ("Česká republika"),
+                                          ("Dánské království"),
+                                          ("Estonská republika"),
+                                          ("Finská republika"),
+                                          ("Francouzská republika"),
+                                          ("Chorvatská republika"),
+                                          ("Irsko"),
+                                          ("Italská republika"),
+                                          ("Kyperská republika"),
+                                          ("Litevská republika"),
+                                          ("Lotyšská republika"),
+                                          ("Lucemburské velkovévodství"),
+                                          ("Maďarsko"),
+                                          ("Maltská republika"),
+                                          ("Spolková republika Německo"),
+                                          ("Nizozemské království"),
+                                          ("Polská republika"),
+                                          ("Portugalská republika"),
+                                          ("Rakouská republika"),
+                                          ("Rumunsko"),
+                                          ("Řecká republika"),
+                                          ("Slovenská republika"),
+                                          ("Slovinská republika"),
+                                          ("Španělské království"),
+                                          ("Švédské království"),
+                                          ("jiny stat")])
     state2 = StringField(" jiny stat")
     zip_code = StringField(" PSC", validators=[DataRequired()])
-    password = PasswordField(" Heslo", validators=[DataRequired(), equal_to("password2", message="Hesla musi souhlasit.")])
+    password = PasswordField(" Heslo",
+                             validators=[DataRequired(), equal_to("password2", message="Hesla musi souhlasit.")])
     password2 = PasswordField(" Opakovat heslo", validators=[DataRequired()])
     terms_agreement = BooleanField(" Souhlasím s podmínkami", validators=[DataRequired()])
     submit = SubmitField("Submit form")
@@ -128,6 +141,61 @@ def index():
 @app.route("/about")
 def about():
     return render_template("about.html")
+
+
+# blog post model
+class Posts(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.Text)
+    author = db.Column(db.String(255))
+    date_posted = db.Column(db.DateTime, default=datetime.now)
+    slug = db.Column(db.String(255))
+
+    def __init__(self, title, content, author, slug, date_posted):
+        self.title = title
+        self.content = content
+        self.author = author
+        self.date_posted = datetime.now()
+        self.slug = slug
+
+    # create post form
+
+
+class PostForm(FlaskForm):
+    title = StringField("Title", validators=[DataRequired()])
+    author = StringField("Author", validators=[DataRequired()])
+    slug = StringField("Slug", validators=[DataRequired()])
+    content = StringField("Content", validators=[DataRequired()], widget=TextArea())
+    submit = SubmitField("Submit", validators=[DataRequired()])
+
+
+@app.route("/add_blog_post", methods=['GET', 'POST'])
+def add_blog_post():
+    post_form = PostForm()
+
+    if post_form.validate_on_submit():
+        post = Posts(title=post_form.title,
+                     author=post_form.author,
+                     slug=post_form.slug,
+                     content=post_form.content,
+                     date_posted=datetime.now())
+        # clear the form
+        post_form.title = ''
+        post_form.author = ''
+        post_form.slug = ''
+        post_form.content = ''
+
+        # add post to database
+        db.session.add(post)
+        db.session.commit()
+
+
+        # return message
+        flash("Vas prispevek byl uspesne pridan!")
+
+    return render_template('add_blog_post.html', post_form=post_form)
 
 
 @app.route("/blogs")
@@ -172,7 +240,24 @@ def login():
         # clear the form
         login_form.email.data = ''
         login_form.password.data = ''
-    return render_template("login.html", email=email, password=password, login_form=login_form)
+
+        # look up user by email
+        password_to_check = Users.query.filter_by(email=email).first()
+
+        # chacked hashed password
+        passed = check_password_hash(password_to_check.password, password)
+        if passed == True:
+            flash("Prihlaseni probehlo uspesne.")
+        else:
+            flash("Vase heslo nebo email nesouhlasi!")
+            email = ''
+            name = ''
+
+    return render_template("login.html", email=email,
+                           password=password,
+                           password_to_check=password_to_check,
+                           passed=passed,
+                           login_form=login_form)
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -216,7 +301,6 @@ def register():
                          password2=hashed_pw2,
                          terms_agreement=register_form.terms_agreement.data,
                          date_of_registration=datetime.now())
-
 
             db.session.add(user)
             db.session.commit()
