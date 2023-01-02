@@ -1,0 +1,22 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+
+<div class="container-md dashboard">
+    <div class="col-12">
+
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+        {% endfor %}
+
+        {% if current_user.is_authenticated %}
+
+        <h3>Vitejte  {{ current_user.username.capitalize() }} </h3>
+
+        {% endif %}
+    </div>
+</div>
+{% include 'footer.html' %}

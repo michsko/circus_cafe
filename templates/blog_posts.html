@@ -1,0 +1,32 @@
+{% include 'header.html' %}
+{% include 'navbar.html' %}
+
+<div class="container-md blog_posts">
+    <h3 class="mb-5 text-uppercase">Blog Posts</h3><br/>
+    <br/>
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
+    {% for post in posts %}
+    <div class="shadow p-3 mb-5 bg-body rounded">
+
+        <h2>{{ post.title }}</h2><br/>
+        By: {{ post.author }}<br/>
+        {{ post.date_posted }} <br/><br/>
+        {{ post.content }}<br/><br/>
+        <div class="d-flex justify-content-end pt-3">
+            <a href="{{url_for('post', id=post.id) }}" class="btn btn-warning btn-md ms-2"> View  Post</a>
+        </div>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+<br/><br/><br/>
+{% include 'footer.html' %}

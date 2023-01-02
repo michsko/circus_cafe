@@ -1,6 +1,6 @@
 {% include 'header.html' %}
 {% include 'navbar.html' %}
-
+<br/><br/><br/>
 <div class="container-md register-form">
     <div class="col-12">
         <section class="h-100 bg-dark">
@@ -16,7 +16,7 @@
                                 </div>
                                 <div class="col-xl-6">
                                     <div class="card-body p-md-5 text-black">
-                                        <h3 class="mb-5 text-uppercase">Registration form</h3>
+                                        <h3 class="mb-5 text-uppercase">Update user informations</h3>
                                         <form method="post">
                                             {% for message in get_flashed_messages() %}
                                             <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -26,67 +26,67 @@
                                             </div>
 
                                             {% endfor %}
-                                            {{ register_form.hidden_tag() }}
+                                            {{ update_form.hidden_tag() }}
                                             <div class="row">
                                                 <div class="col-md-6 mb-4">
                                                     <div class="form-outline">
-                                                        {{ register_form.username(class="form-control form-control-lg") }}
-                                                        {{ register_form.username.label(class="form-label") }}
+                                                        {{ update_form.username(class="form-control form-control-lg") }}
+                                                        {{ update_form.username.label(class="form-label") }}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-4">
                                                     <div class="form-outline">
-                                                        {{ register_form.name(class="form-control form-control-lg")
+                                                        {{ update_form.name(class="form-control form-control-lg")
                                                         }}
-                                                        {{ register_form.name.label(class="form-label") }}
+                                                        {{ update_form.name.label(class="form-label") }}
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6 mb-4">
                                                     <div class="form-outline">
-                                                        {{ register_form.surname(class="form-control
+                                                        {{ update_form.surname(class="form-control
                                                         form-control-lg") }}
-                                                        {{ register_form.surname.label(class="form-label") }}
+                                                        {{ update_form.surname.label(class="form-label") }}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-4">
                                                     <div class="form-outline">
-                                                        {{ register_form.phone_number(class="form-control
+                                                        {{ update_form.phone_number(class="form-control
                                                         form-control-lg"
                                                         , placeholder="+xxx xxxxxxxxx") }}
-                                                        {{ register_form.phone_number.label(class="form-label") }}
+                                                        {{ update_form.phone_number.label(class="form-label") }}
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6 mb-4">
                                                     <div class="form-outline">
-                                                        {{ register_form.gender(class="form-control") }}
-                                                        {{ register_form.gender.label(class="form-label") }}
+                                                        {{ update_form.gender(class="form-control") }}
+                                                        {{ update_form.gender.label(class="form-label") }}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-4">
                                                     <div class="form-outline">
-                                                        {{ register_form.occupation(class="form-control form-control-lg") }}
-                                                        {{ register_form.occupation.label(class="form-label") }}
+                                                        {{ update_form.occupation(class="form-control form-control-lg") }}
+                                                        {{ update_form.occupation.label(class="form-label") }}
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="form-outline mb-4">
                                                         <div class="form-outline">
-                                                            {{ register_form.email(class="form-control
+                                                            {{ update_form.email(class="form-control
                                                             form-control-lg") }}
-                                                            {{ register_form.email.label(class="form-label") }}
+                                                            {{ update_form.email.label(class="form-label") }}
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="form-outline mb-4">
-                                                        {{ register_form.street_address(class="form-control
+                                                        {{ update_form.street_address(class="form-control
                                                         form-control-lg") }}
                                                         {{
-                                                        register_form.street_address.label(class="form-label")
+                                                        update_form.street_address.label(class="form-label")
                                                         }}
                                                     </div>
                                                 </div>
@@ -94,10 +94,10 @@
                                                     <div class="col-md-6 mb-4">
                                                         <div class="form-outline">
                                                             {{
-                                                            register_form.house_number(class="form-control
+                                                            update_form.house_number(class="form-control
                                                             form-control-lg") }}
                                                             {{
-                                                            register_form.house_number.label(class="form-label")
+                                                            update_form.house_number.label(class="form-label")
                                                             }}
                                                         </div>
                                                     </div>
@@ -105,18 +105,18 @@
                                                 <div class="row">
                                                     <div class="col-md-6 mb-4">
                                                         <div class="form-outline">
-                                                            {{ register_form.city(class="form-control
+                                                            {{ update_form.city(class="form-control
                                                             form-control-lg") }}
-                                                            {{ register_form.city.label(class="form-label")
+                                                            {{ update_form.city.label(class="form-label")
                                                             }}
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 mb-4">
                                                         <div class="form-outline">
-                                                            {{ register_form.zip_code(class="form-control
+                                                            {{ update_form.zip_code(class="form-control
                                                             form-control-lg") }}
                                                             {{
-                                                            register_form.zip_code.label(class="form-label")
+                                                            update_form.zip_code.label(class="form-label")
                                                             }}
                                                         </div>
                                                     </div>
@@ -125,16 +125,16 @@
 
                                                 <div class="row">
                                                     <div class="col-md-6 mb-4">
-                                                        {{ register_form.state(class="form-control
+                                                        {{ update_form.state(class="form-control
                                                         form-control-lg") }}
-                                                        {{ register_form.state.label(class="form-label") }}
+                                                        {{ update_form.state.label(class="form-label") }}
                                                     </div>
                                                     <div class="col-md-6 mb-4">
                                                         <div class="form-outline">
-                                                            {{ register_form.state2(class="form-control
+                                                            {{ update_form.state2(class="form-control
                                                             form-control-lg") }}
                                                             {{
-                                                            register_form.state2.label(class="form-label")
+                                                            update_form.state2.label(class="form-label")
                                                             }}
                                                         </div>
                                                     </div>
@@ -142,27 +142,27 @@
 
                                                 <div class="form-outline mb-4">
                                                     <div class="form-outline">
-                                                        {{ register_form.password(class="form-control
+                                                        {{ update_form.password(class="form-control
                                                         form-control-lg") }}
-                                                        {{ register_form.password.label(class="form-label")
+                                                        {{ update_form.password.label(class="form-label")
                                                         }}
                                                     </div>
                                                     <div class="form-outline mb-4">
                                                         <div class="form-outline">
-                                                            {{ register_form.password2(class="form-control
+                                                            {{ update_form.password2(class="form-control
                                                             form-control-lg") }}
                                                             {{
-                                                            register_form.password2.label(class="form-label")
+                                                            update_form.password2.label(class="form-label")
                                                             }}
                                                         </div>
                                                     </div>
                                                     <div class="form-check">
-                                                        {{ register_form.terms_agreement(class="form-check-input") }}
+                                                        {{ update_form.terms_agreement(class="form-check-input") }}
                                                         {{
-                                                        register_form.terms_agreement.label(class="form-label")
+                                                        update_form.terms_agreement.label(class="form-label")
                                                         }}
                                                         <div class="d-flex justify-content-end pt-3">
-                                                            {{ register_form.submit(class="btn btn-warning btn-lg ms-2")
+                                                            {{ update_form.submit(class="btn btn-warning btn-lg ms-2")
                                                             }}
 
                                                         </div>

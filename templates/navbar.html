@@ -15,35 +15,63 @@
             aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+    {% if current_user.is_authenticated %}
 
     <div class="d-flex align-items-center">
-        <a class="btn btn-primary me-3" href="{{url_for('login')}}" role="button">
-            Login
-        </a>
-
-        <a class="btn btn-primary me-3" href="{{url_for('register')}}" role="button">
-            Sign up
-        </a>
-
-        <a
-            class="btn btn-dark px-3"
-            href="#"
-            role="button"
+         <a
+                    class="btn btn-dark px-3"
+                    href="#"
+                    role="button"
             ><i class="bi bi-instagram"></i
-        ></a>
-        <a
-                class="btn btn-dark px-3"
-                href="#"
-                role="button"
-        ><i class="bi bi-facebook"></i
-        ></a>
-        <a
-                class="btn btn-dark px-3"
-                href="#"
-                role="button"
-        ><i class="bi bi-youtube"></i
-        ></a>
-    </div>
+            ></a>
+            <a
+                    class="btn btn-dark px-3"
+                    href="#"
+                    role="button"
+            ><i class="bi bi-facebook"></i
+            ></a>
+            <a
+                    class="btn btn-dark px-3"
+                    href="#"
+                    role="button"
+            ><i class="bi bi-youtube"></i
+            ></a>
+        <a class="btn btn-primary me-3" href="{{url_for('logout')}}" role="button">
+            Logout
+        </a>
+
+        {% else %}
+        <div class="d-flex align-items-center">
+
+            <a
+                    class="btn btn-dark px-3"
+                    href="#"
+                    role="button"
+            ><i class="bi bi-instagram"></i
+            ></a>
+            <a
+                    class="btn btn-dark px-3"
+                    href="#"
+                    role="button"
+            ><i class="bi bi-facebook"></i
+            ></a>
+            <a
+                    class="btn btn-dark px-3"
+                    href="#"
+                    role="button"
+            ><i class="bi bi-youtube"></i
+            ></a>
+            
+             <a class="btn btn-primary me-3" href="{{url_for('login')}}" role="button">
+                Login
+            </a>
+
+            <a class="btn btn-primary me-3" href="{{url_for('register')}}" role="button">
+                Sign up
+            </a>
+        </div>
+            {% endif %}
+
 
 </nav>
 <div>
