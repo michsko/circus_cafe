@@ -18,31 +18,53 @@
     {% if current_user.is_authenticated %}
 
     <div class="d-flex align-items-center">
+
+        <ul class="navbar-right">
+            <li>
+                <a href="#">CESKY</a>
+            </li>
+            <li>
+                <a href="#">ENGLISH</a>
+            </li>
+        </ul>
+        <a
+                class="btn btn-dark px-3"
+                href="#"
+                role="button"
+        ><i class="bi bi-instagram"></i
+        ></a>
+        <a
+                class="btn btn-dark px-3"
+                href="#"
+                role="button"
+        ><i class="bi bi-facebook"></i
+        ></a>
+        <a
+                class="btn btn-dark px-3"
+                href="#"
+                role="button"
+        ><i class="bi bi-youtube"></i
+        ></a>
          <a
-                    class="btn btn-dark px-3"
-                    href="#"
-                    role="button"
-            ><i class="bi bi-instagram"></i
-            ></a>
-            <a
-                    class="btn btn-dark px-3"
-                    href="#"
-                    role="button"
-            ><i class="bi bi-facebook"></i
-            ></a>
-            <a
-                    class="btn btn-dark px-3"
-                    href="#"
-                    role="button"
-            ><i class="bi bi-youtube"></i
-            ></a>
+                class="btn btn-dark px-3"
+                href="#"
+                role="button"
+        ><i class="bi bi-twitter"></i
+        ></a>
         <a class="btn btn-primary me-3" href="{{url_for('logout')}}" role="button">
             Logout
         </a>
 
         {% else %}
         <div class="d-flex align-items-center">
-
+            <ul class="navbar-right px-3">
+                <li>
+                    <a href="#">CESKY</a>
+                </li>
+                <li>
+                    <a href="#">ENGLISH</a>
+                </li>
+            </ul>
             <a
                     class="btn btn-dark px-3"
                     href="#"
@@ -61,8 +83,14 @@
                     role="button"
             ><i class="bi bi-youtube"></i
             ></a>
-            
-             <a class="btn btn-primary me-3" href="{{url_for('login')}}" role="button">
+            <a
+                class="btn btn-dark px-3"
+                href="#"
+                role="button"
+        ><i class="bi bi-twitter"></i
+        ></a>
+
+            <a class="btn btn-primary me-3" href="{{url_for('login')}}" role="button">
                 Login
             </a>
 
@@ -70,12 +98,16 @@
                 Sign up
             </a>
         </div>
-            {% endif %}
-
-
+        {% endif %}
 </nav>
 <div>
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand-center" style="color: white;">Cirkus Cafe</a>
+        <div class="d-flex  align-items-center navbar">
+            <ul class="navbar-left">
+                <li>{{ date.strftime('%B %d, %Y') }}</li>
+                <li>30°C,London</li>
+            </ul>
+            <div>
     </nav>
 </div>

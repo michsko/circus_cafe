@@ -24,8 +24,10 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                         aria-label="Close"></button>
                                             </div>
-
                                             {% endfor %}
+
+                                            {% if id == current_user.id %}
+
                                             {{ update_form.hidden_tag() }}
                                             <div class="row">
                                                 <div class="col-md-6 mb-4">
@@ -68,7 +70,8 @@
                                                 </div>
                                                 <div class="col-md-6 mb-4">
                                                     <div class="form-outline">
-                                                        {{ update_form.occupation(class="form-control form-control-lg") }}
+                                                        {{ update_form.occupation(class="form-control form-control-lg")
+                                                        }}
                                                         {{ update_form.occupation.label(class="form-label") }}
                                                     </div>
                                                 </div>
@@ -180,6 +183,12 @@
         </section>
     </div>
 </div>
+{% else %}
 
-
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    Nejste opravneni menit tyto informace!
+    <button type="button" class="btn-close" data-bs-dismiss="alert"
+            aria-label="Close"></button>
+</div>
+{% endif %}
 {% include 'footer.html' %}

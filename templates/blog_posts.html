@@ -1,9 +1,6 @@
 {% include 'header.html' %}
 {% include 'navbar.html' %}
-
-<div class="container-md blog_posts">
-    <h3 class="mb-5 text-uppercase">Blog Posts</h3><br/>
-    <br/>
+<div class="container blog-posts">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         {{ message }}
@@ -11,22 +8,25 @@
                 aria-label="Close"></button>
     </div>
     {% endfor %}
+    {% if current_user.is_authenticated %}
+    <br/><br/><br/>
+    <div class="col-12">
+        <div class="container py-5 h-100">
 
-    {% for post in posts %}
-    <div class="shadow p-3 mb-5 bg-body rounded">
+            {% for post in posts %}
+            <div class="shadow p-5 mb-5 bg-body rounded">
+                <h2>{{ post.title }}</h2><br/>
+                By: {{ post.poster.username }}<br/>
+                {{ post.date_posted }} <br/><br/>
+                {{ post.content|safe }}<br/><br/>
+                <div class="d-flex justify-content-end pt-3">
+                    <a href="{{url_for('post', id=post.id) }}" class="btn btn-warning btn-md ms-2"> View Post</a>
+                </div>
+            </div>
+            {% endfor %}
 
-        <h2>{{ post.title }}</h2><br/>
-        By: {{ post.author }}<br/>
-        {{ post.date_posted }} <br/><br/>
-        {{ post.content }}<br/><br/>
-        <div class="d-flex justify-content-end pt-3">
-            <a href="{{url_for('post', id=post.id) }}" class="btn btn-warning btn-md ms-2"> View  Post</a>
         </div>
-
     </div>
-    {% endfor %}
-
 </div>
-
-<br/><br/><br/>
+{% endif %}
 {% include 'footer.html' %}

@@ -1,8 +1,8 @@
 {% include 'header.html' %}
 {% include 'navbar.html' %}
 
-
 <div class="container-md post-form">
+
     <div class="shadow p-3 mb-5 bg-body rounded">
         {% for message in get_flashed_messages() %}
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -20,9 +20,6 @@
             {{ post_form.title.label(class_="form-label") }}
             {{ post_form.title(class="form-control") }}
             <br/>
-            {{ post_form.author.label(class_="form-label") }}
-            {{ post_form.author(class="form-control") }}
-            <br/>
             {{ post_form.slug.label(class_="form-label") }}
             {{ post_form.slug(class="form-control") }}
             <br/>
@@ -36,6 +33,8 @@
                 <br/>
             </div>
         </form>
+        {{ ckeditor.load() }}
+        {{ ckeditor.config(name='content') }}
     </div>
 </div>
 <br/><br/><br/>

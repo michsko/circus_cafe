@@ -1,17 +1,16 @@
 from flask import Flask, render_template, flash, request, redirect, url_for
-from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
-from wtforms import StringField, SubmitField, BooleanField, SelectField, PasswordField
-from wtforms.validators import DataRequired, equal_to
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, LoginManager, logout_user, login_required, login_user, current_user
 from datetime import datetime
-from wtforms.widgets import TextArea
-from flask_login import UserMixin, LoginManager, logout_user, login_required, current_user, login_required, login_user
+from webforms import LoginForm, UserForm, PostForm
+from flask_ckeditor import CKEditor, CKEditorField
 
 app = Flask(__name__)
+# add ckeditor
+ckeditor = CKEditor(app)
 # add Users database
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///circus_cafe.db'
-
 # add secret key
 app.config['SECRET_KEY'] = "Ja Pisi Vam Co Mohu Vice"
 # initialize database
@@ -27,201 +26,29 @@ def load_user(user_id):
     return Users.query.get(int(user_id))
 
 
-# create a model
-class Users(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    surname = db.Column(db.String(100), nullable=False)
-    occupation = db.Column(db.String(100), nullable=False)
-    phone_number = db.Column(db.Integer, nullable=False)
-    gender = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(150), nullable=False, unique=True)
-    street_address = db.Column(db.String(100), nullable=False)
-    house_number = db.Column(db.Integer, nullable=False)
-    city = db.Column(db.String(100), nullable=False)
-    state = db.Column(db.String(100))
-    state2 = db.Column(db.String(100))
-    zip_code = db.Column(db.Integer, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
-    terms_agreement = db.Column(db.String(100), nullable=False)
-    blog_posts = db.relationship('Posts', backref="users")
-    date_of_registration = db.Column(db.DateTime, default=datetime.now)
-
-    # pasword hashing and checking
-    # @property
-    # def password(self):
-    #     raise AttributeError('Nelze precist heslo!')
-    # @password.setter
-    # def password(self, password):
-    #     self.password = generate_password_hash(password)
-    #
-    # def verify_password(self, password):
-    #     return check_password_hash(self.password, password)
-    #
-
-    def __init__(self, name, username, surname, occupation, phone_number, gender, email, street_address, house_number,
-                 city,
-                 state, state2, zip_code, password,
-                 password2, terms_agreement, date_of_registration):
-        self.name = name
-        self.username = username
-        self.surname = surname
-        self.occupation = occupation
-        self.phone_number = phone_number
-        self.gender = gender
-        self.email = email
-        self.street_address = street_address
-        self.house_number = house_number
-        self.city = city
-        self.state = state
-        self.state2 = state2
-        self.zip_code = zip_code
-        self.password = password
-        self.password2 = password2
-        self.terms_agreement = terms_agreement
-        self.date_of_registration = datetime.now()
-
-    # def __repr__(self):
-    #     return '<Name %r>' % self.name
-
-
-# create a Form Class
-
-class LoginForm(FlaskForm):
-    email = StringField("E-mail", validators=[DataRequired()])
-    password = PasswordField("Heslo", validators=[DataRequired()])
-    submit = SubmitField("Log in")
-
-
-class UserForm(FlaskForm):
-    username = StringField("Uzivatelske jméno", validators=[DataRequired()])
-    name = StringField("Jméno", validators=[DataRequired()])
-    surname = StringField(" Příjmení", validators=[DataRequired()])
-    occupation = StringField(' Povolani', validators=[DataRequired()])
-    phone_number = StringField(' Telefon', validators=[DataRequired()])
-    gender = SelectField(" Gender", choices=[('Žena'), ('Muž'), ('Jiné')], validators=[DataRequired()])
-    email = StringField(" E-mail", validators=[DataRequired()])
-    street_address = StringField(" Ulice", validators=[DataRequired()])
-    house_number = StringField(" c.p.", validators=[DataRequired()])
-    city = StringField(" Mesto", validators=[DataRequired()])
-    state = SelectField(" Stat", choices=[(" "), ("Belgické království"),
-                                          ("Bulharská republika"),
-                                          ("Česká republika"),
-                                          ("Dánské království"),
-                                          ("Estonská republika"),
-                                          ("Finská republika"),
-                                          ("Francouzská republika"),
-                                          ("Chorvatská republika"),
-                                          ("Irsko"),
-                                          ("Italská republika"),
-                                          ("Kyperská republika"),
-                                          ("Litevská republika"),
-                                          ("Lotyšská republika"),
-                                          ("Lucemburské velkovévodství"),
-                                          ("Maďarsko"),
-                                          ("Maltská republika"),
-                                          ("Spolková republika Německo"),
-                                          ("Nizozemské království"),
-                                          ("Polská republika"),
-                                          ("Portugalská republika"),
-                                          ("Rakouská republika"),
-                                          ("Rumunsko"),
-                                          ("Řecká republika"),
-                                          ("Slovenská republika"),
-                                          ("Slovinská republika"),
-                                          ("Španělské království"),
-                                          ("Švédské království"),
-                                          ("jiny stat")])
-    state2 = StringField(" jiny stat")
-    zip_code = StringField(" PSC", validators=[DataRequired()])
-    password = PasswordField(" Heslo",
-                             validators=[DataRequired(), equal_to("password2", message="Hesla musi souhlasit.")])
-    password2 = PasswordField(" Opakovat heslo", validators=[DataRequired()])
-    terms_agreement = BooleanField(" Souhlasím s podmínkami", validators=[DataRequired()])
-    submit = SubmitField("Sign up")
-
-
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-
 @app.route("/about")
 def about():
-    return render_template("about.html")
-
-
-# blog post model
-class Posts(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255))
-    content = db.Column(db.Text)
-    author = db.Column(db.String(255))
-    date_posted = db.Column(db.DateTime, default=datetime.now)
-    slug = db.Column(db.String(255))
-    owner_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-
-    def __init__(self, title, content, author, slug, date_posted):
-        self.title = title
-        self.content = content
-        self.author = author
-        self.date_posted = datetime.now()
-        self.slug = slug
-
-
-class DeletedPosts(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255))
-    content = db.Column(db.Text)
-    author = db.Column(db.String(255))
-    date_posted = db.Column(db.String(255))
-    slug = db.Column(db.String(255))
-    owner_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    date_deleted = db.Column(db.DateTime, default=datetime.now)
-
-    def __init__(self, title, content, author, slug, date_posted, date_deleted):
-        self.title = title
-        self.content = content
-        self.author = author
-        self.date_posted = date_posted
-        self.slug = slug
-        self.date_deleted = datetime.now()
-
-
-# Creation of the database tables within the application context.
-with app.app_context():
-    db.create_all()
-
-
-# create post form
-class PostForm(FlaskForm):
-    title = StringField("Title", validators=[DataRequired()])
-    author = StringField("Author", validators=[DataRequired()])
-    slug = StringField("Slug", validators=[DataRequired()])
-    content = StringField("Content", validators=[DataRequired()], widget=TextArea())
-    submit = SubmitField("Submit post")
+    date = datetime.now()
+    return render_template("about.html", date=date)
 
 
 @app.route("/add_blog_post", methods=['GET', 'POST'])
 @login_required
 def add_blog_post():
-    title = None
-    author = None
-    slug = None
-    content = None
+    date = datetime.now()
     post_form = PostForm()
 
     if post_form.validate_on_submit():
+        poster = current_user.id
         posts = Posts(title=post_form.title.data,
-                      author=post_form.author.data,
+                      poster_id = poster,
                       slug=post_form.slug.data,
                       content=post_form.content.data,
                       date_posted=datetime.now())
 
         # clear the form
         post_form.title.data = ''
-        post_form.author.data = ''
+
         post_form.slug.data = ''
         post_form.content.data = ''
 
@@ -232,105 +59,81 @@ def add_blog_post():
         # return message
         flash("Vas prispevek byl uspesne pridan!")
 
-    return render_template('add_blog_post.html',
+
+    return redirect(url_for('blog_posts',
                            post_form=post_form,
-                           title=title)
+                           date=date
+                           ))
+
+
+@app.route("/blogs")
+def blogs():
+    date = datetime.now()
+    return render_template("blogs.html", date=date)
 
 
 @app.route("/blog_posts")
 @login_required
 def blog_posts():
+    date = datetime.now()
     # grab all the posts from database
-    posts = Posts.query.order_by(Posts.date_posted)
-    return render_template("blog_posts.html", posts=posts)
+    id = current_user.id
+    posts = Posts.query.filter_by(poster_id=id).all()
+    return render_template("blog_posts.html", posts=posts, date=date)
 
 
-@app.route("/blog_post/<int:id>")
-def post(id):
-    post = Posts.query.get_or_404(id)
-    return render_template("post.html", post=post)
-
-
-@app.route("/blog_posts/update/<int:id>", methods=['GET', 'POST'])
+@app.route("/dashboard", methods=['GET', 'POST'])
 @login_required
-def update_post(id):
-    post_form = PostForm()
-    post_to_update = Posts.query.get_or_404(id)
-
-    if request.method == "POST":
-        post_to_update.title = request.form['title']
-        post_to_update.author = request.form['author']
-        post_to_update.slug = request.form['slug']
-        post_to_update.content = request.form['content']
-
-        post_form.title.data = ''
-        post_form.author.data = ''
-        post_form.slug.data = ''
-        post_form.content.data = ''
-        try:
-            db.session.commit()
-            flash("Tvuj prispevek byl uspesne zmenen.")
-            return redirect(url_for('blog_posts', post_form=post_form,
-                                    post_to_update=post_to_update))
-        except:
-            flash("Neco se nepovedlo. Zkuste to znovu.")
-            return render_template('update_blog_post.html', post_form=post_form,
-                                   post_to_update=post_to_update)
-    else:
-        return render_template('update_blog_post.html', post_form=post_form,
-                               post_to_update=post_to_update)
+def dashboard():
+    date = datetime.now()
+    return render_template("dashboard.html", date=date)
 
 
 @app.route("/blog_posts/delete/<int:id>", methods=['GET', 'POST'])
 @login_required
 def delete_post(id):
     deleted_post_to_add = Posts.query.get_or_404(id)
+
+
+    poster = current_user.id
     deleted_post = DeletedPosts(title=deleted_post_to_add.title,
                                 content=deleted_post_to_add.content,
-                                author=deleted_post_to_add.author,
+                                poster_id=poster,
                                 date_posted=deleted_post_to_add.date_posted,
                                 slug=deleted_post_to_add.slug,
                                 date_deleted=datetime.now())
 
     blog_post_to_delete = Posts.query.get_or_404(id)
-    try:
-        db.session.add(deleted_post)
-        db.session.delete(blog_post_to_delete)
-        db.session.commit()
-        flash("Vas prispevek byl vymazan.")
+    id = current_user.id
+    if id == blog_post_to_delete.poster.id:
+        try:
+            db.session.add(deleted_post)
+            db.session.delete(blog_post_to_delete)
+            db.session.commit()
+            flash("Vas prispevek byl vymazan.")
+            return redirect(url_for('blog_posts'))
+        except:
+            flash("Neco se nepovedlo.")
+    else:
+        flash("Nemuzes vymazat tento prispevek!")
         return redirect(url_for('blog_posts'))
-    except:
-        flash("Neco se nepovedlo.")
-
-
-@app.route("/blogs")
-def blogs():
-    return render_template("blogs.html")
 
 
 @app.route("/forum")
 def forum():
-    return render_template("forum.html")
+    date = datetime.now()
+    return render_template("forum.html", date=date)
 
 
-# create search function
-@app.route("/search", methods=["POST"])
-def search():
-    return render_template("profile.html")
-
-
-@app.route("/news")
-def news():
-    return render_template("zpravy.html")
-
-
-@app.route("/profile")
-def profile():
-    return render_template("profile.html")
+@app.route("/")
+def index():
+    date = datetime.now()
+    return render_template("index.html", date=date)
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    date = datetime.now()
     login_form = LoginForm()
     # validate Form
     if login_form.validate_on_submit():
@@ -350,7 +153,7 @@ def login():
         else:
             flash("Vas email nebo heslo nesouhlasi. Prosim zkuste to znovu!")
 
-    return render_template("login.html", login_form=login_form)
+    return render_template("login.html", login_form=login_form, date=date)
 
 
 @app.route("/logout", methods=['GET', 'POST'])
@@ -361,14 +164,35 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route("/dashboard", methods=['GET', 'POST'])
+@app.route("/news")
+def news():
+    date = datetime.now()
+    return render_template("zpravy.html", date=date)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    date = datetime.now()
+    return render_template("404.html", date=date)
+
+
+@app.errorhandler(500)
+def page_not_found(e):
+    date = datetime.now()
+    return render_template("500.html", date=date)
+
+
+@app.route("/blog_post/<int:id>")
 @login_required
-def dashboard():
-    return render_template("dashboard.html")
+def post(id):
+    date = datetime.now()
+    post = Posts.query.get_or_404(id)
+    return render_template("post.html", post=post, date=date)
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    date = datetime.now()
     name = None
     username = None
     surname = None
@@ -415,7 +239,7 @@ def register():
             db.session.commit()
         name = register_form.name.data
         register_form.name.data = ''
-        register_form.username = ''
+        register_form.username.data = ''
         register_form.surname.data = ''
         register_form.occupation.data = ''
         register_form.phone_number.data = ''
@@ -432,18 +256,67 @@ def register():
         register_form.date_of_registration = ''
 
         flash("Registrace probehla uspesne.")
+        return redirect(url_for('login', register_form=register_form,
+                         name=name,
+                         date=date))
     our_users = Users.query.order_by(Users.date_of_registration)
     return render_template("register.html", register_form=register_form,
                            name=name,
-                           our_users=our_users)
+                           our_users=our_users,
+                           date=date)
+
+
+# create search function
+@app.route("/search", methods=["POST"])
+def search():
+    date = datetime.now()
+    return render_template("profile.html", date=date)
+
+
+@app.route("/blog_posts/update/<int:id>", methods=['GET', 'POST'])
+@login_required
+def update_post(id):
+    date = datetime.now()
+    post_form = PostForm()
+    post_to_update = Posts.query.get_or_404(id)
+
+    #    if post_form.validate_on_submit():
+    #         post_form.title = post_form.title.data
+    #         post_form.slug = post_form.slug.data
+    #         post_form.content = post_form.content.data
+    if post_form.validate_on_submit():
+        post_to_update.title = post_form.title.data
+        post_to_update.slug = post_form.slug.data
+        post_to_update.content = post_form.content.data
+
+        # post_form.title.data = ''
+        # # post_form.author.data = ''
+        # post_form.slug.data = ''
+        # post_form.content.data = ''
+        db.session.add(post_to_update)
+        db.session.commit()
+        flash("Tvuj prispevek byl uspesne zmenen.")
+        return redirect(url_for('blog_posts', id=post_to_update.id))
+
+    if current_user.id == post_to_update.poster_id:
+        post_form.title.data = post_to_update.title
+        # form.author.data = post.author
+        post_form.slug.data = post_to_update.slug
+        post_form.content.data = post_to_update.content
+        return render_template('update_blog_post.html', post_form=post_form,
+                                 date=date)
+    else:
+        flash("Neco se nepovedlo. Zkuste to znovu.")
+        posts = Posts.query.order_by(Posts.date_posted)
+        return render_template('blog_posts.html',posts=posts, date=date)
 
 
 @app.route("/update_user/<int:id>", methods=['GET', 'POST'])
 @login_required
 def update_user(id):
+    date = datetime.now()
     update_form = UserForm()
     user_to_update = Users.query.get_or_404(id)
-
     if request.method == "POST":
         user_to_update.name = request.form['name']
         user_to_update.username = request.form['username']
@@ -463,25 +336,127 @@ def update_user(id):
         try:
             db.session.commit()
             flash("Tvoje osobni informace byly zmeneny.")
-            return render_template('update', update_form=update_form,
-                                   user_to_update=user_to_update)
+            return redirect(url_for('dashboard', update_form=update_form,
+                                   user_to_update=user_to_update, id=id))
         except:
             flash("Neco se nepovedlo. Zkuste to znovu.")
             return render_template('update_user.html', update_form=update_form,
-                                   user_to_update=user_to_update)
+                                   user_to_update=user_to_update, date=date, id=id)
     else:
         return render_template('update_user.html', update_form=update_form,
-                               post_to_update=user_to_update)
+                               post_to_update=user_to_update, date=date, id=id)
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template("404.html")
+# create a model
+class Users(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    surname = db.Column(db.String(100), nullable=False)
+    occupation = db.Column(db.String(100), nullable=False)
+    phone_number = db.Column(db.Integer, nullable=False)
+    gender = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(150), nullable=False, unique=True)
+    street_address = db.Column(db.String(100), nullable=False)
+    house_number = db.Column(db.Integer, nullable=False)
+    city = db.Column(db.String(100), nullable=False)
+    state = db.Column(db.String(100))
+    state2 = db.Column(db.String(100))
+    zip_code = db.Column(db.Integer, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    terms_agreement = db.Column(db.String(100), nullable=False)
+    blog_posts = db.relationship('Posts', backref="poster")
+    date_of_registration = db.Column(db.DateTime, default=datetime.now)
+
+    def __repr__(self):
+        return f'<Users "{self.title}">'
+
+    def __init__(self, name, username, surname,
+                 occupation, phone_number, gender,
+                 email, street_address, house_number,
+                 city, state, state2, zip_code, password,
+                 password2, terms_agreement, date_of_registration):
+        self.name = name
+        self.username = username
+        self.surname = surname
+        self.occupation = occupation
+        self.phone_number = phone_number
+        self.gender = gender
+        self.email = email
+        self.street_address = street_address
+        self.house_number = house_number
+        self.city = city
+        self.state = state
+        self.state2 = state2
+        self.zip_code = zip_code
+        self.password = password
+        self.password2 = password2
+        self.terms_agreement = terms_agreement
+        self.date_of_registration = datetime.now()
 
 
-@app.errorhandler(500)
-def page_not_found(e):
-    return render_template("500.html")
+# blog post model
+class Posts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.Text)
+    # author = db.Column(db.String(255))
+    date_posted = db.Column(db.DateTime, default=datetime.now)
+    slug = db.Column(db.String(255))
+    poster_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    def __repr__(self):
+        return f'<Posts "{self.title}">'
+
+    def __init__(self, title, content, slug, date_posted, poster_id):
+        self.title = title
+        self.content = content
+        # self.author = author
+        self.date_posted = datetime.now()
+        self.slug = slug
+        self.poster_id = poster_id
+
+
+class DeletedPosts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.Text)
+    # author = db.Column(db.String(255))
+    date_posted = db.Column(db.String(255))
+    slug = db.Column(db.String(255))
+    poster_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    date_deleted = db.Column(db.DateTime, default=datetime.now)
+
+    def __repr__(self):
+        return f'<DeletedPosts "{self.title}">'
+
+    def __init__(self, title, content, poster_id, slug, date_posted, date_deleted):
+        self.title = title
+        self.content = content
+        # self.author = author
+        self.date_posted = date_posted
+        self.slug = slug
+        self.date_deleted = datetime.now()
+        self.poster_id = poster_id
+
+# Creation of the database tables within the application context.
+with app.app_context():
+    db.create_all()
+
+# def __repr__(self):
+#     return '<Name %r>' % self.name
+
+# pasword hashing and checking
+# @property
+# def password(self):
+#     raise AttributeError('Nelze precist heslo!')
+# @password.setter
+# def password(self, password):
+#     self.password = generate_password_hash(password)
+#
+# def verify_password(self, password):
+#     return check_password_hash(self.password, password)
+#
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 {% include 'header.html' %}
 
-<body>
+
 {% include 'navbar.html' %}
 <div class="container-md profile">
     <div class="col-12">
@@ -8,13 +8,22 @@
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{'profile'}}">Profile</a>
+                        <a class="nav-link" href="{{''}}">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{'news'}}">Zprávy</a>
+                        <a class="nav-link active" href="{{''}}">Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"> ????? </a>
+                        <a class="nav-link active" href="{{''}}">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{''}}">Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{''}}">Forum</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{''}}">Analylsis</a>
                     </li>
                 </ul>
             </div>
@@ -167,6 +176,5 @@
         </div>
     </div>
 </div>
-</body>
 
 {% include 'footer.html' %}
