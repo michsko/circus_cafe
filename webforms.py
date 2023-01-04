@@ -62,6 +62,13 @@ class UserForm(FlaskForm):
     submit = SubmitField("Sign up")
 
 
+# create picture form
+class PictureForm(FlaskForm):
+    picture = FileField("Profilove foto")
+    name = StringField("Popis obrazku")
+    submit = SubmitField("Ulozit")
+
+
 # create post form
 class PostForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])

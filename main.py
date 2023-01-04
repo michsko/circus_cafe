@@ -1,13 +1,26 @@
 from flask import Flask, render_template, flash, request, redirect, url_for
+from flask_wtf import file
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, logout_user, login_required, login_user, current_user
 from datetime import datetime
-from webforms import LoginForm, UserForm, PostForm
+
+from werkzeug.utils import secure_filename
+
+from webforms import LoginForm, UserForm, PostForm, PictureForm
 from flask_ckeditor import CKEditor, CKEditorField
 
 app = Flask(__name__)
+
+
 # add ckeditor
+
+
+# Function that initializes the db and creates the tables
+def db_init(app):
+    db.init_app(app)
+
+
 ckeditor = CKEditor(app)
 # add Users database
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///circus_cafe.db'
@@ -16,6 +29,8 @@ app.config['SECRET_KEY'] = "Ja Pisi Vam Co Mohu Vice"
 # initialize database
 db = SQLAlchemy(app)
 # Flask login management
+db_init(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -41,14 +56,13 @@ def add_blog_post():
     if post_form.validate_on_submit():
         poster = current_user.id
         posts = Posts(title=post_form.title.data,
-                      poster_id = poster,
+                      poster_id=poster,
                       slug=post_form.slug.data,
                       content=post_form.content.data,
                       date_posted=datetime.now())
 
         # clear the form
         post_form.title.data = ''
-
         post_form.slug.data = ''
         post_form.content.data = ''
 
@@ -100,6 +114,7 @@ def dashboard():
     date = datetime.now()
     form = UserForm
     id = current_user.id
+    profile_picture = Picture.query.get_or_404(id)
     user_to_update = Users.query.get_or_404(id)
     if request.method == 'POST':
         user_to_update.profile_pic = request.files['profile_pic']
@@ -107,21 +122,20 @@ def dashboard():
             db.session.commit()
             flash("Vase foto bylo uspesne zmeneno!")
             return render_template("dashboard.html", form=form, date=date,
-                                   user_to_update=user_to_update)
+                                   user_to_update=user_to_update, profile_picture=profile_picture)
         except:
             flash("Neco se nepovedlo prosim zkuste to znovu.")
             return render_template("dashboard.html", form=form, date=date,
-                                   user_to_update=user_to_update)
-    return render_template('dashboard.html', form=form, date=date,
-                                   user_to_update=user_to_update)
+                                   user_to_update=user_to_update, profile_picture=profile_picture)
 
+    return render_template('dashboard.html', form=form, date=date,
+                           user_to_update=user_to_update, profile_picture=profile_picture)
 
 
 @app.route("/blog_posts/delete/<int:id>", methods=['GET', 'POST'])
 @login_required
 def delete_post(id):
     deleted_post_to_add = Posts.query.get_or_404(id)
-
 
     poster = current_user.id
     deleted_post = DeletedPosts(title=deleted_post_to_add.title,
@@ -285,8 +299,8 @@ def register():
 
         flash("Registrace probehla uspesne.")
         return redirect(url_for('login', register_form=register_form,
-                         name=name,
-                         date=date))
+                                name=name,
+                                date=date))
     our_users = Users.query.order_by(Users.date_of_registration)
     return render_template("register.html", register_form=register_form,
                            name=name,
@@ -332,11 +346,11 @@ def update_post(id):
         post_form.slug.data = post_to_update.slug
         post_form.content.data = post_to_update.content
         return render_template('update_blog_post.html', post_form=post_form,
-                                 date=date)
+                               date=date)
     else:
         flash("Neco se nepovedlo. Zkuste to znovu.")
         posts = Posts.query.order_by(Posts.date_posted)
-        return render_template('blog_posts.html',posts=posts, date=date)
+        return render_template('blog_posts.html', posts=posts, date=date)
 
 
 @app.route("/update_user/<int:id>", methods=['GET', 'POST'])
@@ -365,7 +379,7 @@ def update_user(id):
             db.session.commit()
             flash("Tvoje osobni informace byly zmeneny.")
             return redirect(url_for('dashboard', update_form=update_form,
-                                   user_to_update=user_to_update, id=id))
+                                    user_to_update=user_to_update, id=id))
         except:
             flash("Neco se nepovedlo. Zkuste to znovu.")
             return render_template('update_user.html', update_form=update_form,
@@ -373,6 +387,82 @@ def update_user(id):
     else:
         return render_template('update_user.html', update_form=update_form,
                                post_to_update=user_to_update, date=date, id=id)
+
+
+@app.route("/upload_profile_pic", methods=['GET', 'POST'])
+@login_required
+def upload_profile_pic():
+    date = datetime.now()
+    id = current_user.id
+    profile_picture = Picture.query.get_or_404(id)
+    form = PictureForm()
+
+    if request.method == 'POST':
+        file = request.files['file']
+        picture = Picture(name=file.filename, picture=file.read(), poster_id=id)
+        db.session.add(picture)
+        db.session.commit()
+
+        flash(f"Uploaded: {file.filename}")
+
+    return render_template("upload_profile_pic.html", date=date,
+                           form=form,
+                           profile_picture=profile_picture)
+
+    #
+    # form = PictureForm()
+    # id = current_user.id
+    # picture_to_update = Picture.query.get_or_404(id)
+    #
+    # if request.method == 'POST':
+    #     picture_to_update.name = request.form['name']
+    #     picture_to_update.picture = request.files['picture']
+    #
+    #     try:
+    #         db.session.commit()
+    #         flash("Profilova fotografie byla aktualizovana!")
+    #         return render_template("dashboard.html", form=form, date=date, picture_to_update=picture_to_update)
+    #     except:
+    #         flash("Neco se nepovedlo!")
+    # else:
+    #     return render_template("upload_profile_pic.html", form=form, date=date, picture_to_update=picture_to_update)
+
+    # picture = request.files['picture']
+    # id = current_user.id
+    #
+    # if not picture:
+    #     return "not uploaded", 400
+    #
+    # filename = secure_filename(file.filename)
+    # mimetype = picture.mimetype
+    #
+    # picture = Picture(picture=picture.read(), mimetype=mimetype, name=filename, poster_id=id)
+    # db.session.add(picture)
+    # db.session.commit()
+
+    # if form.validate_on_submit():
+    #     poster = current_user.id
+    #     new_picture = Picture(picture=form.picture.data,
+    #                           name=form.name.data,
+    #                           poster_id=poster)
+
+    # id = current_user.id
+    # form = PictureForm()
+    # poster = current_user.id
+    #
+    # if form.validate_on_submit():
+    #     picture = Picture(picture=form.picture.data,
+    #                       poster_id=poster)
+    #
+    #     db.session.add(picture)
+    #     db.session.commit()
+    #
+    #     flash("Vase profilova fotografie byla aktualizovana!")
+    #     return render_template("upload_profile_pic.html", picture=picture,
+    #                            form=form, date=date)
+    #
+    # return render_template("upload_profile_pic.html", form=form, date=date)
+    #
 
 
 # create a model
@@ -392,38 +482,38 @@ class Users(db.Model, UserMixin):
     state2 = db.Column(db.String(100))
     zip_code = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(100), nullable=False)
-    profile_pic = db.Column(db.String(), nullable=True)
+    password2 = db.Column(db.String(100), nullable=False)
+    profile_pic = db.relationship("Picture", backref="poster")
     terms_agreement = db.Column(db.String(100), nullable=False)
     blog_posts = db.relationship('Posts', backref="poster")
     date_of_registration = db.Column(db.DateTime, default=datetime.now)
-
-    def __repr__(self):
-        return f'<Users "{self.title}">'
-
-    def __init__(self, name, username, surname,
-                 occupation, phone_number, gender,
-                 email, street_address, house_number,
-                 city, state, state2, zip_code, password,
-                 password2, terms_agreement, date_of_registration):
-        self.name = name
-        self.username = username
-        self.surname = surname
-        self.occupation = occupation
-        self.phone_number = phone_number
-        self.gender = gender
-        self.email = email
-        self.street_address = street_address
-        self.house_number = house_number
-        self.city = city
-        self.state = state
-        self.state2 = state2
-        self.zip_code = zip_code
-        self.password = password
-        self.password2 = password2
-        self.terms_agreement = terms_agreement
-        self.date_of_registration = datetime.now()
-        self.profile_pic = self.profile_pic
-
+    #
+    # def __repr__(self):
+    #     return f'<Users "{self.title}">'
+    #
+    # def __init__(self, name, username, surname,
+    #              occupation, phone_number, gender,
+    #              email, street_address, house_number,
+    #              city, state, state2, zip_code, password,
+    #              password2, terms_agreement, date_of_registration):
+    #     self.name = name
+    #     self.username = username
+    #     self.surname = surname
+    #     self.occupation = occupation
+    #     self.phone_number = phone_number
+    #     self.gender = gender
+    #     self.email = email
+    #     self.street_address = street_address
+    #     self.house_number = house_number
+    #     self.city = city
+    #     self.state = state
+    #     self.state2 = state2
+    #     self.zip_code = zip_code
+    #     self.password = password
+    #     self.password2 = password2
+    #     self.terms_agreement = terms_agreement
+    #     self.date_of_registration = datetime.now()
+    #     self.profile_pic = self.profile_pic
 
 
 # blog post model
@@ -435,17 +525,30 @@ class Posts(db.Model):
     date_posted = db.Column(db.DateTime, default=datetime.now)
     slug = db.Column(db.String(255))
     poster_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    #
+    # def __repr__(self):
+    #     return f'<Posts "{self.title}">'
+    #
+    # def __init__(self, title, content, slug, date_posted, poster_id):
+    #     self.title = title
+    #     self.content = content
+    #     # self.author = author
+    #     self.date_posted = datetime.now()
+    #     self.slug = slug
+    #     self.poster_id = poster_id
 
-    def __repr__(self):
-        return f'<Posts "{self.title}">'
 
-    def __init__(self, title, content, slug, date_posted, poster_id):
-        self.title = title
-        self.content = content
-        # self.author = author
-        self.date_posted = datetime.now()
-        self.slug = slug
-        self.poster_id = poster_id
+class Picture(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    picture = db.Column(db.LargeBinary)
+    name = db.Column(db.String(50), nullable=False)
+    poster_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    #
+    # def __init__(self, picture, poster_id, name, mimetype):
+    #     self.picture = picture
+    #     self.poster_id = poster_id
+    #     self.name = name
+    #     self.mimetype = mimetype
 
 
 class DeletedPosts(db.Model):
@@ -457,20 +560,22 @@ class DeletedPosts(db.Model):
     slug = db.Column(db.String(255))
     poster_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     date_deleted = db.Column(db.DateTime, default=datetime.now)
+    #
+    # def __repr__(self):
+    #     return f'<DeletedPosts "{self.title}">'
+    #
+    # def __init__(self, title, content, poster_id, slug, date_posted, date_deleted):
+    #     self.title = title
+    #     self.content = content
+    #     # self.author = author
+    #     self.date_posted = date_posted
+    #     self.slug = slug
+    #     self.date_deleted = datetime.now()
+    #     self.poster_id = poster_id
 
-    def __repr__(self):
-        return f'<DeletedPosts "{self.title}">'
+    # Creation of the database tables if the db doesnt already exists.
 
-    def __init__(self, title, content, poster_id, slug, date_posted, date_deleted):
-        self.title = title
-        self.content = content
-        # self.author = author
-        self.date_posted = date_posted
-        self.slug = slug
-        self.date_deleted = datetime.now()
-        self.poster_id = poster_id
 
-# Creation of the database tables within the application context.
 with app.app_context():
     db.create_all()
 
