@@ -187,6 +187,7 @@ footer {
 /* blog posts */
 .post-form {
     width: 100%;
+    min-height: 1000px;
     padding: 50px;
     font-family: "Fjalla One", sans-serif;
 

@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, SelectField, Boolea
 from wtforms.validators import DataRequired, equal_to
 from wtforms.widgets import TextArea
 from flask_ckeditor import CKEditorField
+from flask_wtf.file import FileField
 
 # create a Form Class
 
@@ -56,6 +57,7 @@ class UserForm(FlaskForm):
     password = PasswordField(" Heslo",
                              validators=[DataRequired(), equal_to("password2", message="Hesla musi souhlasit.")])
     password2 = PasswordField(" Opakovat heslo", validators=[DataRequired()])
+    profile_pic = FileField('Profilove foto')
     terms_agreement = BooleanField(" Souhlasím s podmínkami", validators=[DataRequired()])
     submit = SubmitField("Sign up")
 

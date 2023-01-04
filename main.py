@@ -58,12 +58,24 @@ def add_blog_post():
 
         # return message
         flash("Vas prispevek byl uspesne pridan!")
+        return redirect(url_for("blog_posts"))
 
-
-    return redirect(url_for('blog_posts',
+    return render_template('add_blog_post.html',
                            post_form=post_form,
                            date=date
-                           ))
+                           )
+
+
+@app.route("/admin")
+@login_required
+def admin():
+    date = datetime.now()
+    id = current_user.id
+    if id == 1:
+        return render_template("admin.html", date=date)
+    else:
+        flash('Nemate potrebne opravneni.')
+        return redirect(url_for("dashboard"))
 
 
 @app.route("/blogs")
@@ -86,7 +98,23 @@ def blog_posts():
 @login_required
 def dashboard():
     date = datetime.now()
-    return render_template("dashboard.html", date=date)
+    form = UserForm
+    id = current_user.id
+    user_to_update = Users.query.get_or_404(id)
+    if request.method == 'POST':
+        user_to_update.profile_pic = request.files['profile_pic']
+        try:
+            db.session.commit()
+            flash("Vase foto bylo uspesne zmeneno!")
+            return render_template("dashboard.html", form=form, date=date,
+                                   user_to_update=user_to_update)
+        except:
+            flash("Neco se nepovedlo prosim zkuste to znovu.")
+            return render_template("dashboard.html", form=form, date=date,
+                                   user_to_update=user_to_update)
+    return render_template('dashboard.html', form=form, date=date,
+                                   user_to_update=user_to_update)
+
 
 
 @app.route("/blog_posts/delete/<int:id>", methods=['GET', 'POST'])
@@ -364,6 +392,7 @@ class Users(db.Model, UserMixin):
     state2 = db.Column(db.String(100))
     zip_code = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    profile_pic = db.Column(db.String(), nullable=True)
     terms_agreement = db.Column(db.String(100), nullable=False)
     blog_posts = db.relationship('Posts', backref="poster")
     date_of_registration = db.Column(db.DateTime, default=datetime.now)
@@ -393,6 +422,8 @@ class Users(db.Model, UserMixin):
         self.password2 = password2
         self.terms_agreement = terms_agreement
         self.date_of_registration = datetime.now()
+        self.profile_pic = self.profile_pic
+
 
 
 # blog post model
