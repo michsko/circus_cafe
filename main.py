@@ -4,9 +4,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, logout_user, login_required, login_user, current_user
 from datetime import datetime
-
 from werkzeug.utils import secure_filename
-
+import uuid as uuid
+import os
 from webforms import LoginForm, UserForm, PostForm, PictureForm
 from flask_ckeditor import CKEditor, CKEditorField
 
@@ -35,6 +35,14 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+UPLOAD_FOLDER = 'static/images/upload'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -112,24 +120,7 @@ def blog_posts():
 @login_required
 def dashboard():
     date = datetime.now()
-    form = UserForm
-    id = current_user.id
-    profile_picture = Picture.query.get_or_404(id)
-    user_to_update = Users.query.get_or_404(id)
-    if request.method == 'POST':
-        user_to_update.profile_pic = request.files['profile_pic']
-        try:
-            db.session.commit()
-            flash("Vase foto bylo uspesne zmeneno!")
-            return render_template("dashboard.html", form=form, date=date,
-                                   user_to_update=user_to_update, profile_picture=profile_picture)
-        except:
-            flash("Neco se nepovedlo prosim zkuste to znovu.")
-            return render_template("dashboard.html", form=form, date=date,
-                                   user_to_update=user_to_update, profile_picture=profile_picture)
-
-    return render_template('dashboard.html', form=form, date=date,
-                           user_to_update=user_to_update, profile_picture=profile_picture)
+    return render_template('dashboard.html', date=date)
 
 
 @app.route("/blog_posts/delete/<int:id>", methods=['GET', 'POST'])
@@ -394,78 +385,54 @@ def update_user(id):
 def upload_profile_pic():
     date = datetime.now()
     id = current_user.id
-    profile_picture = Picture.query.get_or_404(id)
     form = PictureForm()
 
     if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(url_for("dashboard"))
         file = request.files['file']
-        picture = Picture(name=file.filename, picture=file.read(), poster_id=id)
-        db.session.add(picture)
-        db.session.commit()
-
-        flash(f"Uploaded: {file.filename}")
-
-    return render_template("upload_profile_pic.html", date=date,
-                           form=form,
-                           profile_picture=profile_picture)
-
-    #
-    # form = PictureForm()
-    # id = current_user.id
-    # picture_to_update = Picture.query.get_or_404(id)
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(url_for("dashboard"))
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filename_pic = str(uuid.uuid1()) + "_" + filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_pic))
+            flash(f"Vase profilova fotografie byla zmenena! {filename_pic}")
+            picture = Picture(name=filename_pic, picture=file.read(), poster_id=id)
+            return redirect(url_for('dashboard',
+                                    filename_pic=filename_pic))
+    return render_template("upload_profile_pic.html", date=date, form=form)
     #
     # if request.method == 'POST':
-    #     picture_to_update.name = request.form['name']
-    #     picture_to_update.picture = request.files['picture']
-    #
-    #     try:
-    #         db.session.commit()
-    #         flash("Profilova fotografie byla aktualizovana!")
-    #         return render_template("dashboard.html", form=form, date=date, picture_to_update=picture_to_update)
-    #     except:
-    #         flash("Neco se nepovedlo!")
-    # else:
-    #     return render_template("upload_profile_pic.html", form=form, date=date, picture_to_update=picture_to_update)
+    #     if file = request.files['file']
 
-    # picture = request.files['picture']
-    # id = current_user.id
+    #     # grab image name
+    #     picture_filename = secure_filename(file.filename)
+    #     # set uuid
+    #     picture_name = str(uuid.uuid1()) + "_" + picture_filename
     #
-    # if not picture:
-    #     return "not uploaded", 400
+    #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], picture_name))
     #
-    # filename = secure_filename(file.filename)
-    # mimetype = picture.mimetype
-    #
-    # picture = Picture(picture=picture.read(), mimetype=mimetype, name=filename, poster_id=id)
-    # db.session.add(picture)
-    # db.session.commit()
-
-    # if form.validate_on_submit():
-    #     poster = current_user.id
-    #     new_picture = Picture(picture=form.picture.data,
-    #                           name=form.name.data,
-    #                           poster_id=poster)
-
-    # id = current_user.id
-    # form = PictureForm()
-    # poster = current_user.id
-    #
-    # if form.validate_on_submit():
-    #     picture = Picture(picture=form.picture.data,
-    #                       poster_id=poster)
+    #     picture = Picture(name=picture_name, picture=file.read(), poster_id=id)
     #
     #     db.session.add(picture)
     #     db.session.commit()
     #
-    #     flash("Vase profilova fotografie byla aktualizovana!")
-    #     return render_template("upload_profile_pic.html", picture=picture,
-    #                            form=form, date=date)
+    #     flash(f"Uploaded: {picture_name}")
+    #     flash("Vase profilova fotografie byla zmenena.")
+    #     return redirect(url_for('dashboard', date=date, picture_name=picture_name))
     #
-    # return render_template("upload_profile_pic.html", form=form, date=date)
-    #
+    # return render_template("upload_profile_pic.html", date=date,
+    #                        form=form)
+
+    # create a model
 
 
-# create a model
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
@@ -542,6 +509,7 @@ class Picture(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     picture = db.Column(db.LargeBinary)
     name = db.Column(db.String(50), nullable=False)
+    published_date = db.Column(db.DateTime, default=datetime.now)
     poster_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     #
     # def __init__(self, picture, poster_id, name, mimetype):
@@ -593,7 +561,6 @@ with app.app_context():
 # def verify_password(self, password):
 #     return check_password_hash(self.password, password)
 #
-
 
 if __name__ == "__main__":
     app.run(debug=True)

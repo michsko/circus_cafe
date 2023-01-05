@@ -16,11 +16,14 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-img">
-                        {% if profile_picture == Null %}
-                        <img src="{{ url_for('static', filename= 'images/profile/profile_pic.png') }}"
+                        {% if current_user.filename_pic %}
+
+                        <img src="{{ url_for('static', filename= 'images/' + 'current_user.filename_pic' ) }}"
                              alt=""/>
                         {% else %}
-                        <img src="{{ profile_picture }}"/>
+                        <img src="{{ url_for('static', filename= 'images/profile/profile_pic.png') }}"
+                             alt=""/>
+
                         {% endif %}
                     </div>
 
