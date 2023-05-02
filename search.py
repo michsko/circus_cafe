@@ -15,5 +15,5 @@ def get_news(name):
     print(news)
 
     in_title = news
-get_news("Schrek")
+get_news("xxxx")
 
