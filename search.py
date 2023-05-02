@@ -3,7 +3,7 @@ import datetime
 
 
 def get_news(name):
-    news_api = "ea795d98b45e48ababf06cd2ae0d734e"
+    news_api = "xxxxx"
     searched_name = name
     news_parameters = news_parameters = {"q": searched_name,
                                          "sortBy": "publishedAT",
